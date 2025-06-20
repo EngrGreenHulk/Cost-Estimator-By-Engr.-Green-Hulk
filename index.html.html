@@ -1,0 +1,2173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cost Estimator By Engr. Green Hulk</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        body { font-family: 'Roboto', sans-serif; background-color: #f3f4f6; }
+        h1, h2, h3 { font-family: 'Poppins', sans-serif; }
+        .accordion-header .chevron {
+            transition: transform 0.3s ease-in-out;
+        }
+        .accordion-header.active .chevron {
+            transform: rotate(180deg);
+        }
+        .accordion-panel {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out;
+        }
+        .accordion-panel.active {
+            max-height: 1500px; /* Adjust as needed to accommodate content */
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <div class="container mx-auto max-w-md">
+        <header class="text-center py-6">
+            <h1 class="text-3xl font-bold text-gray-800">Cost Estimator</h1>
+            <p class="text-gray-500 mt-1">By Engr. Green Hulk</p>
+        </header>
+
+        <main class="bg-white rounded-t-3xl shadow-lg p-4">
+            <!-- Accordion Container -->
+            <div id="accordion-container" class="space-y-2">
+                
+                <!-- Concrete Works Accordion -->
+                <div class="accordion-item border rounded-lg">
+                    <button class="accordion-header w-full flex justify-between items-center p-4 text-left font-bold text-lg" data-target="panel-concrete">
+                        <div class="flex items-center space-x-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
+                            <span>Concrete Works</span>
+                        </div>
+                        <svg class="chevron h-6 w-6 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                    </button>
+                    <div id="panel-concrete" class="accordion-panel px-4">
+                        <div class="mb-4">
+                            <label for="concrete-type-selector" class="block text-sm font-medium text-gray-700 mb-1">Concrete Element:</label>
+                            <select id="concrete-type-selector" class="p-2 border rounded-md w-full bg-white">
+                                <option value="rectangular">Rectangular (Slab, Beam, etc.)</option>
+                                <option value="round-column">Round Column</option>
+                                <option value="footing">Footing</option>
+                                <option value="retaining-wall">Retaining Wall</option>
+                            </select>
+                        </div>
+                        <div id="inputs-rectangular" class="concrete-inputs space-y-2">
+                            <input id="concrete-length" type="number" placeholder="Length (m)" class="p-2 border rounded-md w-full">
+                            <input id="concrete-width" type="number" placeholder="Width (m)" class="p-2 border rounded-md w-full">
+                            <input id="concrete-thickness" type="number" placeholder="Thickness/Depth (m)" class="p-2 border rounded-md w-full">
+                            <input id="concrete-count" type="number" placeholder="Quantity" class="p-2 border rounded-md w-full">
+                        </div>
+                        <div id="inputs-round-column" class="concrete-inputs hidden space-y-2">
+                            <input id="column-diameter" type="number" placeholder="Diameter (m)" class="p-2 border rounded-md w-full">
+                            <input id="column-height" type="number" placeholder="Height (m)" class="p-2 border rounded-md w-full">
+                            <input id="column-count" type="number" placeholder="Quantity" class="p-2 border rounded-md w-full">
+                        </div>
+                        <div id="inputs-footing" class="concrete-inputs hidden space-y-2">
+                             <input id="footing-length" type="number" placeholder="Footing Length (m)" class="p-2 border rounded-md w-full">
+                             <input id="footing-width" type="number" placeholder="Footing Width (m)" class="p-2 border rounded-md w-full">
+                             <input id="footing-thickness" type="number" placeholder="Footing Thickness (m)" class="p-2 border rounded-md w-full">
+                             <input id="footing-count" type="number" placeholder="Quantity" class="p-2 border rounded-md w-full">
+                        </div>
+                         <div id="inputs-retaining-wall" class="concrete-inputs hidden space-y-2">
+                            <input id="wall-length" type="number" placeholder="Wall Length (m)" class="p-2 border rounded-md w-full">
+                            <input id="stem-height" type="number" placeholder="Stem Height (m)" class="p-2 border rounded-md w-full">
+                            <input id="stem-top-thickness" type="number" placeholder="Stem Top Thickness (m)" class="p-2 border rounded-md w-full">
+                            <input id="stem-bot-thickness" type="number" placeholder="Stem Bottom Thickness (m)" class="p-2 border rounded-md w-full">
+                            <input id="rw-footing-width" type="number" placeholder="Footing Width (m)" class="p-2 border rounded-md w-full">
+                            <input id="rw-footing-thickness" type="number" placeholder="Footing Thickness (m)" class="p-2 border rounded-md w-full">
+                        </div>
+                        <div class="mt-4">
+                             <select id="concrete-class" class="p-2 border rounded-md w-full bg-white">
+                                 <option value="A">Class A (1:2:4)</option>
+                                 <option value="B">Class B (1:2.5:5)</option>
+                                 <option value="C">Class C (1:3:6)</option>
+                            </select>
+                        </div>
+                        <button id="calculate-concrete" class="mt-4 bg-green-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-green-700 w-full transition-colors">Calculate Concrete</button>
+                        <div id="concrete-reference" class="mt-6"></div>
+                    </div>
+                </div>
+
+                <!-- Reinforcing Steel Accordion -->
+                <div class="accordion-item border rounded-lg">
+                     <button class="accordion-header w-full flex justify-between items-center p-4 text-left font-bold text-lg" data-target="panel-steel">
+                        <div class="flex items-center space-x-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l-4 4-4-4M6 16l-4-4 4-4" /></svg>
+                            <span>Reinforcing Steel</span>
+                        </div>
+                        <svg class="chevron h-6 w-6 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                    </button>
+                    <div id="panel-steel" class="accordion-panel px-4">
+                        <div class="mb-4">
+                             <label for="steel-type-selector" class="block text-sm font-medium text-gray-700 mb-1">Steel Element:</label>
+                            <select id="steel-type-selector" class="p-2 border rounded-md w-full bg-white">
+                                <option value="slab">Slab on Grade</option>
+                                <option value="suspended-slab">Suspended Slab</option>
+                                <option value="footing-steel">Footing</option>
+                                <option value="dowel">Dowel Bars (Col to Footing)</option>
+                                <option value="beam">Simple Beam</option>
+                                <option value="suspended-beam">Suspended Beam</option>
+                                <option value="column">Tied Column</option>
+                                <option value="spiral-column">Spiral Column</option>
+                                <option value="retaining-wall-steel">Retaining Wall</option>
+                                <option value="stairs">Stairs</option>
+                                <option value="mat-foundation">Mat Foundation</option>
+                            </select>
+                        </div>
+                        <div class="mb-4">
+                            <label for="rebar-length-selector" class="block text-sm font-medium text-gray-700 mb-1">Rebar Commercial Length:</label>
+                            <select id="rebar-length-selector" class="p-2 border rounded-md w-full bg-white">
+                                <option value="6.0">6.0 meters</option>
+                                <option value="7.5">7.5 meters</option>
+                                <option value="9.0">9.0 meters</option>
+                                <option value="10.5">10.5 meters</option>
+                                <option value="12.0">12.0 meters</option>
+                            </select>
+                        </div>
+                        
+                        <div id="inputs-slab" class="steel-inputs space-y-2">
+                             <h3 class="font-semibold text-gray-600 border-t pt-4">Slab on Grade Details</h3>
+                             <input id="slab-length" type="number" placeholder="Slab Length (m)" class="p-2 border rounded-md w-full">
+                             <input id="slab-width" type="number" placeholder="Slab Width (m)" class="p-2 border rounded-md w-full">
+                             <input id="slab-bar-dia" type="number" placeholder="Bar Diameter (mm)" class="p-2 border rounded-md w-full" value="10">
+                             <input id="slab-spacing" type="number" placeholder="Bar Spacing (mm)" class="p-2 border rounded-md w-full" value="150">
+                        </div>
+
+                        <div id="inputs-suspended-slab" class="steel-inputs hidden space-y-2">
+                             <h3 class="font-semibold text-gray-600 border-t pt-4">Suspended Slab Details</h3>
+                             <input id="sslab-length" type="number" placeholder="Slab Length (Long Span, m)" class="p-2 border rounded-md w-full">
+                             <input id="sslab-width" type="number" placeholder="Slab Width (Short Span, m)" class="p-2 border rounded-md w-full">
+                             <h4 class="font-medium text-sm text-gray-500 pt-2">Top Bars</h4>
+                             <input id="sslab-top-dia" type="number" placeholder="Top Bar Dia. (mm)" class="p-2 border rounded-md w-full" value="10">
+                             <input id="sslab-top-spacing" type="number" placeholder="Top Bar Spacing (mm)" class="p-2 border rounded-md w-full" value="200">
+                             <h4 class="font-medium text-sm text-gray-500 pt-2">Bottom Bars</h4>
+                             <input id="sslab-bot-dia" type="number" placeholder="Bottom Bar Dia. (mm)" class="p-2 border rounded-md w-full" value="10">
+                             <input id="sslab-bot-spacing" type="number" placeholder="Bottom Bar Spacing (mm)" class="p-2 border rounded-md w-full" value="150">
+                        </div>
+
+                        <div id="inputs-footing-steel" class="steel-inputs hidden space-y-2">
+                             <h3 class="font-semibold text-gray-600 border-t pt-4">Footing Details</h3>
+                             <input id="fs-length" type="number" placeholder="Footing Length (m)" class="p-2 border rounded-md w-full">
+                             <input id="fs-width" type="number" placeholder="Footing Width (m)" class="p-2 border rounded-md w-full">
+                             <input id="fs-count" type="number" placeholder="Number of Footings" class="p-2 border rounded-md w-full">
+                             <input id="fs-bar-dia" type="number" placeholder="Bar Diameter (mm)" class="p-2 border rounded-md w-full" value="12">
+                             <input id="fs-spacing" type="number" placeholder="Bar Spacing (mm)" class="p-2 border rounded-md w-full" value="150">
+                        </div>
+                        
+                         <div id="inputs-dowel" class="steel-inputs hidden space-y-2">
+                             <h3 class="font-semibold text-gray-600 border-t pt-4">Dowel Details</h3>
+                             <input id="dowel-footing-thick" type="number" placeholder="Footing Thickness (m)" class="p-2 border rounded-md w-full">
+                             <input id="dowel-qty" type="number" placeholder="No. of Dowels per Column" class="p-2 border rounded-md w-full">
+                             <input id="dowel-dia" type="number" placeholder="Dowel Bar Dia. (mm)" class="p-2 border rounded-md w-full" value="16">
+                             <input id="dowel-col-count" type="number" placeholder="Number of Columns" class="p-2 border rounded-md w-full">
+                         </div>
+
+                        <div id="inputs-beam" class="steel-inputs hidden space-y-2">
+                             <h3 class="font-semibold text-gray-600 border-t pt-4">Simple Beam Details</h3>
+                             <input id="beam-length" type="number" placeholder="Beam Length (m)" class="p-2 border rounded-md w-full">
+                             <input id="beam-width" type="number" placeholder="Beam Width (mm)" class="p-2 border rounded-md w-full">
+                             <input id="beam-depth" type="number" placeholder="Beam Depth (mm)" class="p-2 border rounded-md w-full">
+                             <input id="beam-count" type="number" placeholder="Number of Beams" class="p-2 border rounded-md w-full">
+                             <h4 class="font-medium text-sm text-gray-500 pt-2">Main Bars (Top & Bottom)</h4>
+                             <input id="beam-main-bars" type="number" placeholder="No. of Main Bars (Total)" class="p-2 border rounded-md w-full">
+                             <input id="beam-main-dia" type="number" placeholder="Main Bar Dia. (mm)" class="p-2 border rounded-md w-full" value="16">
+                             <h4 class="font-medium text-sm text-gray-500 pt-2">Stirrups</h4>
+                             <input id="beam-stirrup-dia" type="number" placeholder="Stirrup Dia. (mm)" class="p-2 border rounded-md w-full" value="10">
+                             <input id="beam-stirrup-spacing" type="text" placeholder="e.g, 2@50, 4@100, rest@150" class="p-2 border rounded-md w-full">
+                        </div>
+                        
+                        <div id="inputs-suspended-beam" class="steel-inputs hidden space-y-2">
+                             <h3 class="font-semibold text-gray-600 border-t pt-4">Suspended Beam Details</h3>
+                             <input id="s-beam-length" type="number" placeholder="Beam Length (m)" class="p-2 border rounded-md w-full">
+                             <input id="s-beam-width" type="number" placeholder="Beam Width (mm)" class="p-2 border rounded-md w-full">
+                             <input id="s-beam-depth" type="number" placeholder="Beam Depth (mm)" class="p-2 border rounded-md w-full">
+                             <input id="s-beam-count" type="number" placeholder="Number of Beams" class="p-2 border rounded-md w-full">
+                             <h4 class="font-medium text-sm text-gray-500 pt-2">Main Top Bars (Straight)</h4>
+                             <input id="s-beam-top-qty" type="number" placeholder="No. of Straight Top Bars" class="p-2 border rounded-md w-full">
+                             <input id="s-beam-top-dia" type="number" placeholder="Top Bar Dia. (mm)" class="p-2 border rounded-md w-full" value="16">
+                              <h4 class="font-medium text-sm text-gray-500 pt-2">Extra Top Bars (at Supports, L/4)</h4>
+                             <input id="s-beam-extra-top-qty" type="number" placeholder="No. of Extra Top Bars" class="p-2 border rounded-md w-full" value="0">
+                             <input id="s-beam-extra-top-dia" type="number" placeholder="Extra Top Bar Dia. (mm)" class="p-2 border rounded-md w-full" value="16">
+                             <h4 class="font-medium text-sm text-gray-500 pt-2">Main Bottom Bars (Straight)</h4>
+                             <input id="s-beam-bot-qty" type="number" placeholder="No. of Straight Bottom Bars" class="p-2 border rounded-md w-full">
+                             <input id="s-beam-bot-dia" type="number" placeholder="Bottom Bar Dia. (mm)" class="p-2 border rounded-md w-full" value="16">
+                              <h4 class="font-medium text-sm text-gray-500 pt-2">Extra Bottom Bars (at Midspan, L/2)</h4>
+                             <input id="s-beam-extra-bot-qty" type="number" placeholder="No. of Extra Bottom Bars" class="p-2 border rounded-md w-full" value="0">
+                             <input id="s-beam-extra-bot-dia" type="number" placeholder="Extra Bottom Bar Dia. (mm)" class="p-2 border rounded-md w-full" value="16">
+                             <h4 class="font-medium text-sm text-gray-500 pt-2">Stirrups</h4>
+                             <input id="s-beam-stirrup-dia" type="number" placeholder="Stirrup Dia. (mm)" class="p-2 border rounded-md w-full" value="10">
+                             <input id="s-beam-stirrup-spacing" type="text" placeholder="e.g, 2@50, 4@100, rest@150" class="p-2 border rounded-md w-full">
+                        </div>
+
+                        <div id="inputs-column" class="steel-inputs hidden space-y-2">
+                             <h3 class="font-semibold text-gray-600 border-t pt-4">Tied Column Details</h3>
+                             <input id="col-floors" type="number" placeholder="Number of Floors" class="p-2 border rounded-md w-full">
+                             <input id="col-floor-height" type="number" placeholder="Typical Floor Height (m)" class="p-2 border rounded-md w-full">
+                             <input id="col-beam-depth" type="number" placeholder="Beam Depth (m)" class="p-2 border rounded-md w-full">
+                             <input id="col-width" type="number" placeholder="Column Width (mm)" class="p-2 border rounded-md w-full">
+                             <input id="col-depth" type="number" placeholder="Column Depth (mm)" class="p-2 border rounded-md w-full">
+                             <input id="col-count" type="number" placeholder="Number of Columns" class="p-2 border rounded-md w-full">
+                             <h4 class="font-medium text-sm text-gray-500 pt-2">Vertical Bars</h4>
+                             <input id="col-vert-qty" type="number" placeholder="No. of Vertical Bars" class="p-2 border rounded-md w-full">
+                             <input id="col-vert-dia" type="number" placeholder="Vertical Bar Dia. (mm)" class="p-2 border rounded-md w-full" value="16">
+                             <h4 class="font-medium text-sm text-gray-500 pt-2">Lateral Ties</h4>
+                             <input id="col-tie-dia" type="number" placeholder="Lateral Tie Dia. (mm)" class="p-2 border rounded-md w-full" value="10">
+                             <input id="col-tie-spacing" type="text" placeholder="e.g, 4@50, 4@100, rest@200" class="p-2 border rounded-md w-full">
+                        </div>
+
+                        <div id="inputs-spiral-column" class="steel-inputs hidden space-y-2">
+                             <h3 class="font-semibold text-gray-600 border-t pt-4">Spiral Column Details</h3>
+                             <input id="spiral-col-height" type="number" placeholder="Column Height (m)" class="p-2 border rounded-md w-full">
+                             <input id="spiral-col-dia" type="number" placeholder="Column Diameter (mm)" class="p-2 border rounded-md w-full">
+                             <input id="spiral-col-count" type="number" placeholder="Number of Columns" class="p-2 border rounded-md w-full">
+                             <h4 class="font-medium text-sm text-gray-500 pt-2">Vertical Bars</h4>
+                             <input id="spiral-vert-qty" type="number" placeholder="No. of Vertical Bars" class="p-2 border rounded-md w-full" value="6">
+                             <input id="spiral-vert-dia" type="number" placeholder="Vertical Bar Dia. (mm)" class="p-2 border rounded-md w-full" value="16">
+                             <h4 class="font-medium text-sm text-gray-500 pt-2">Spiral Hoops</h4>
+                             <input id="spiral-rebar-dia" type="number" placeholder="Spiral Rebar Dia. (mm)" class="p-2 border rounded-md w-full" value="10">
+                             <input id="spiral-pitch" type="number" placeholder="Spiral Pitch (mm)" class="p-2 border rounded-md w-full" value="50">
+                        </div>
+
+                        <div id="inputs-retaining-wall-steel" class="steel-inputs hidden space-y-2">
+                             <h3 class="font-semibold text-gray-600 border-t pt-4">Cantilever Retaining Wall Details</h3>
+                             <input id="rws-length" type="number" placeholder="Wall Length (m)" class="p-2 border rounded-md w-full">
+                             <input id="rws-height" type="number" placeholder="Stem Height (m)" class="p-2 border rounded-md w-full">
+                             <input id="rws-foot-width" type="number" placeholder="Footing Width (m)" class="p-2 border rounded-md w-full">
+                             <h4 class="font-medium text-sm text-gray-500 pt-2">Stem Vertical Bars (Main)</h4>
+                             <input id="rws-vert-dia" type="number" placeholder="Dia. (mm)" class="p-2 border rounded-md w-full" value="16">
+                             <input id="rws-vert-spacing" type="number" placeholder="Spacing (mm)" class="p-2 border rounded-md w-full" value="150">
+                             <h4 class="font-medium text-sm text-gray-500 pt-2">Stem Horizontal Bars</h4>
+                             <input id="rws-horz-dia" type="number" placeholder="Dia. (mm)" class="p-2 border rounded-md w-full" value="10">
+                             <input id="rws-horz-spacing" type="number" placeholder="Spacing (mm)" class="p-2 border rounded-md w-full" value="200">
+                             <h4 class="font-medium text-sm text-gray-500 pt-2">Footing Transverse Bars</h4>
+                             <input id="rws-foot-trans-dia" type="number" placeholder="Dia. (mm)" class="p-2 border rounded-md w-full" value="12">
+                             <input id="rws-foot-trans-spacing" type="number" placeholder="Spacing (mm)" class="p-2 border rounded-md w-full" value="200">
+                             <h4 class="font-medium text-sm text-gray-500 pt-2">Footing Longitudinal Bars</h4>
+                             <input id="rws-foot-long-dia" type="number" placeholder="Dia. (mm)" class="p-2 border rounded-md w-full" value="12">
+                             <input id="rws-foot-long-spacing" type="number" placeholder="Spacing (mm)" class="p-2 border rounded-md w-full" value="200">
+                        </div>
+                        
+                        <div id="inputs-stairs" class="steel-inputs hidden space-y-2">
+                            <h3 class="font-semibold text-gray-600 border-t pt-4">Stairs Details</h3>
+                            <input id="stairs-width" type="number" placeholder="Stair Width (m)" class="p-2 border rounded-md w-full">
+                            <input id="stairs-run" type="number" placeholder="Horizontal Length (Run) (m)" class="p-2 border rounded-md w-full">
+                            <input id="stairs-rise" type="number" placeholder="Vertical Height (Rise) (m)" class="p-2 border rounded-md w-full">
+                            <input id="stairs-flights" type="number" placeholder="Number of Flights" class="p-2 border rounded-md w-full" value="1">
+                             <h4 class="font-medium text-sm text-gray-500 pt-2">Main Bars (Along Incline)</h4>
+                             <input id="stairs-main-dia" type="number" placeholder="Dia. (mm)" class="p-2 border rounded-md w-full" value="12">
+                             <input id="stairs-main-spacing" type="number" placeholder="Spacing (mm)" class="p-2 border rounded-md w-full" value="150">
+                             <h4 class="font-medium text-sm text-gray-500 pt-2">Temperature Bars (Across Width)</h4>
+                             <input id="stairs-temp-dia" type="number" placeholder="Dia. (mm)" class="p-2 border rounded-md w-full" value="10">
+                             <input id="stairs-temp-spacing" type="number" placeholder="Spacing (mm)" class="p-2 border rounded-md w-full" value="200">
+                        </div>
+
+                         <div id="inputs-mat-foundation" class="steel-inputs hidden space-y-2">
+                             <h3 class="font-semibold text-gray-600 border-t pt-4">Mat Foundation Details</h3>
+                             <input id="mat-length" type="number" placeholder="Foundation Length (m)" class="p-2 border rounded-md w-full">
+                             <input id="mat-width" type="number" placeholder="Foundation Width (m)" class="p-2 border rounded-md w-full">
+                             <h4 class="font-medium text-sm text-gray-500 pt-2">Top Mat Bars</h4>
+                             <input id="mat-top-dia" type="number" placeholder="Top Bar Dia. (mm)" class="p-2 border rounded-md w-full" value="12">
+                             <input id="mat-top-spacing" type="number" placeholder="Top Bar Spacing (mm)" class="p-2 border rounded-md w-full" value="150">
+                             <h4 class="font-medium text-sm text-gray-500 pt-2">Bottom Mat Bars</h4>
+                             <input id="mat-bot-dia" type="number" placeholder="Bottom Bar Dia. (mm)" class="p-2 border rounded-md w-full" value="12">
+                             <input id="mat-bot-spacing" type="number" placeholder="Bottom Bar Spacing (mm)" class="p-2 border rounded-md w-full" value="150">
+                         </div>
+
+
+                        <button id="calculate-steel" class="mt-4 bg-green-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-green-700 w-full transition-colors">Calculate Steel</button>
+                        <div id="steel-reference" class="mt-6"></div>
+                    </div>
+                </div>
+
+                <!-- Masonry Works Accordion -->
+                <div class="accordion-item border rounded-lg">
+                    <button class="accordion-header w-full flex justify-between items-center p-4 text-left font-bold text-lg" data-target="panel-masonry">
+                        <div class="flex items-center space-x-3">
+                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2z" /></svg>
+                            <span>Masonry & Finishing</span>
+                        </div>
+                        <svg class="chevron h-6 w-6 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                    </button>
+                    <div id="panel-masonry" class="accordion-panel px-4">
+                        <div class="mb-4">
+                            <label for="masonry-type-selector" class="block text-sm font-medium text-gray-700 mb-1">Work Type:</label>
+                            <select id="masonry-type-selector" class="p-2 border rounded-md w-full bg-white">
+                                <option value="chb-wall">CHB Wall Laying</option>
+                                <option value="chb-rebar">CHB Wall Reinforcement</option>
+                                <option value="chb-filling">CHB Core Filling</option>
+                                <option value="brick-wall">Brick Wall (Common)</option>
+                                <option value="plastering">Cement Plastering</option>
+                            </select>
+                        </div>
+                        <div id="inputs-chb-wall" class="masonry-inputs space-y-2">
+                            <input id="chb-wall-length" type="number" placeholder="Wall Length (m)" class="p-2 border rounded-md w-full">
+                            <input id="chb-wall-height" type="number" placeholder="Wall Height (m)" class="p-2 border rounded-md w-full">
+                            <select id="chb-wall-size" class="p-2 border rounded-md w-full bg-white">
+                                <option value="10">4" (10cm) CHB</option>
+                                <option value="15">6" (15cm) CHB</option>
+                                <option value="20">8" (20cm) CHB</option>
+                            </select>
+                        </div>
+                         <div id="inputs-chb-rebar" class="masonry-inputs hidden space-y-2">
+                             <input id="chb-rebar-length" type="number" placeholder="Wall Length (m)" class="p-2 border rounded-md w-full">
+                             <input id="chb-rebar-height" type="number" placeholder="Wall Height (m)" class="p-2 border rounded-md w-full">
+                             <h4 class="font-medium text-sm text-gray-500 pt-2">Vertical Bars</h4>
+                             <input id="chb-vert-dia" type="number" placeholder="Dia. (mm)" class="p-2 border rounded-md w-full" value="10">
+                             <input id="chb-vert-spacing" type="number" placeholder="Spacing (mm)" class="p-2 border rounded-md w-full" value="600">
+                             <h4 class="font-medium text-sm text-gray-500 pt-2">Horizontal Bars</h4>
+                             <input id="chb-horz-dia" type="number" placeholder="Dia. (mm)" class="p-2 border rounded-md w-full" value="10">
+                             <input id="chb-horz-layers" type="number" placeholder="Spacing (every X layers)" class="p-2 border rounded-md w-full" value="3">
+                         </div>
+                         <div id="inputs-chb-filling" class="masonry-inputs hidden space-y-2">
+                            <input id="chb-fill-length" type="number" placeholder="Wall Length (m)" class="p-2 border rounded-md w-full">
+                            <input id="chb-fill-height" type="number" placeholder="Wall Height (m)" class="p-2 border rounded-md w-full">
+                            <select id="chb-fill-size" class="p-2 border rounded-md w-full bg-white">
+                                <option value="10">4" (10cm) CHB</option>
+                                <option value="15">6" (15cm) CHB</option>
+                                <option value="20">8" (20cm) CHB</option>
+                            </select>
+                            <select id="chb-fill-mix" class="p-2 border rounded-md w-full bg-white">
+                                <option value="B">Class B (1:3) Mortar</option>
+                                <option value="A">Class A (1:2) Mortar</option>
+                                <option value="C">Class C (1:4) Mortar</option>
+                            </select>
+                        </div>
+                         <div id="inputs-brick-wall" class="masonry-inputs hidden space-y-2">
+                            <input id="brick-wall-length" type="number" placeholder="Wall Length (m)" class="p-2 border rounded-md w-full">
+                            <input id="brick-wall-height" type="number" placeholder="Wall Height (m)" class="p-2 border rounded-md w-full">
+                        </div>
+                        <div id="inputs-plastering" class="masonry-inputs hidden space-y-2">
+                            <input id="plaster-length" type="number" placeholder="Plaster Length (m)" class="p-2 border rounded-md w-full">
+                            <input id="plaster-height" type="number" placeholder="Plaster Height (m)" class="p-2 border rounded-md w-full">
+                            <input id="plaster-thickness" type="number" placeholder="Plaster Thickness (mm)" class="p-2 border rounded-md w-full" value="16">
+                             <select id="plaster-mix" class="p-2 border rounded-md w-full bg-white">
+                                 <option value="B">Class B (1:3) Mortar</option>
+                                 <option value="A">Class A (1:2) Mortar</option>
+                                 <option value="C">Class C (1:4) Mortar</option>
+                            </select>
+                        </div>
+                        <button id="calculate-masonry" class="mt-4 bg-green-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-green-700 w-full transition-colors">Calculate Masonry & Finishing</button>
+                        <div id="masonry-reference" class="mt-6"></div>
+                    </div>
+                </div>
+
+                <!-- Earthworks Accordion -->
+                <div class="accordion-item border rounded-lg">
+                    <button class="accordion-header w-full flex justify-between items-center p-4 text-left font-bold text-lg" data-target="panel-earthworks">
+                        <div class="flex items-center space-x-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9l-3 3m0 0l-3-3m3 3V3m6 6h-3m3 3h-3"/></svg>
+                            <span>Earthworks</span>
+                        </div>
+                        <svg class="chevron h-6 w-6 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                    </button>
+                    <div id="panel-earthworks" class="accordion-panel px-4">
+                        <div class="mb-4">
+                            <label for="earthworks-type-selector" class="block text-sm font-medium text-gray-700 mb-1">Work Type:</label>
+                            <select id="earthworks-type-selector" class="p-2 border rounded-md w-full bg-white">
+                                <option value="excavation-rectangular">Rectangular Excavation</option>
+                                <option value="backfilling">Backfilling</option>
+                            </select>
+                        </div>
+                        <div id="inputs-excavation-rectangular" class="earthworks-inputs space-y-2">
+                            <input id="excavation-length" type="number" placeholder="Length (m)" class="p-2 border rounded-md w-full">
+                            <input id="excavation-width" type="number" placeholder="Width (m)" class="p-2 border rounded-md w-full">
+                            <input id="excavation-depth" type="number" placeholder="Depth (m)" class="p-2 border rounded-md w-full">
+                            <input id="excavation-count" type="number" placeholder="Number of Excavations" class="p-2 border rounded-md w-full">
+                        </div>
+                        <div id="inputs-backfilling" class="earthworks-inputs hidden space-y-2">
+                            <input id="backfill-length" type="number" placeholder="Length (m)" class="p-2 border rounded-md w-full">
+                            <input id="backfill-width" type="number" placeholder="Width (m)" class="p-2 border rounded-md w-full">
+                            <input id="backfill-depth" type="number" placeholder="Depth (m)" class="p-2 border rounded-md w-full">
+                            <input id="backfill-count" type="number" placeholder="Number of Backfill Areas" class="p-2 border rounded-md w-full">
+                        </div>
+                        <button id="calculate-earthworks" class="mt-4 bg-green-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-green-700 w-full transition-colors">Calculate Earthworks</button>
+                        <div id="earthworks-reference" class="mt-6"></div>
+                    </div>
+                </div>
+
+                <!-- Formwork Accordion -->
+                <div class="accordion-item border rounded-lg">
+                    <button class="accordion-header w-full flex justify-between items-center p-4 text-left font-bold text-lg" data-target="panel-formwork">
+                        <div class="flex items-center space-x-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                            <span>Formwork</span>
+                        </div>
+                        <svg class="chevron h-6 w-6 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                    </button>
+                    <div id="panel-formwork" class="accordion-panel px-4">
+                        <div class="mb-4">
+                            <label for="formwork-type-selector" class="block text-sm font-medium text-gray-700 mb-1">Formwork Element:</label>
+                            <select id="formwork-type-selector" class="p-2 border rounded-md w-full bg-white">
+                                <option value="suspended-slab-formwork">Suspended Slab Formwork</option>
+                                <option value="beam-formwork">Beam Formwork</option>
+                                <option value="rectangular-column-formwork">Rectangular Column Formwork</option>
+                                <option value="round-column-formwork">Round Column Formwork</option>
+                                <option value="footing-formwork">Footing Formwork</option>
+                            </select>
+                        </div>
+                        <div class="mb-4">
+                            <label for="formwork-material-selector" class="block text-sm font-medium text-gray-700 mb-1">Formwork Material:</label>
+                            <select id="formwork-material-selector" class="p-2 border rounded-md w-full bg-white">
+                                <option value="plywood">Plywood</option>
+                                <option value="phenolic">Phenolic Board</option>
+                            </select>
+                        </div>
+                        <div id="inputs-suspended-slab-formwork" class="formwork-inputs space-y-2">
+                            <input id="fws-length" type="number" placeholder="Slab Length (m)" class="p-2 border rounded-md w-full">
+                            <input id="fws-width" type="number" placeholder="Slab Width (m)" class="p-2 border rounded-md w-full">
+                            <input id="fws-thickness" type="number" placeholder="Slab Thickness (m)" class="p-2 border rounded-md w-full">
+                            <input id="fws-count" type="number" placeholder="Quantity" class="p-2 border rounded-md w-full">
+                        </div>
+                        <div id="inputs-beam-formwork" class="formwork-inputs hidden space-y-2">
+                            <input id="fwb-length" type="number" placeholder="Beam Length (m)" class="p-2 border rounded-md w-full">
+                            <input id="fwb-width" type="number" placeholder="Beam Width (mm)" class="p-2 border rounded-md w-full">
+                            <input id="fwb-depth" type="number" placeholder="Beam Depth (mm)" class="p-2 border rounded-md w-full">
+                            <input id="fwb-count" type="number" placeholder="Quantity" class="p-2 border rounded-md w-full">
+                        </div>
+                        <div id="inputs-rectangular-column-formwork" class="formwork-inputs hidden space-y-2">
+                            <input id="fwrc-height" type="number" placeholder="Column Height (m)" class="p-2 border rounded-md w-full">
+                            <input id="fwrc-width" type="number" placeholder="Column Width (mm)" class="p-2 border rounded-md w-full">
+                            <input id="fwrc-depth" type="number" placeholder="Column Depth (mm)" class="p-2 border rounded-md w-full">
+                            <input id="fwrc-count" type="number" placeholder="Quantity" class="p-2 border rounded-md w-full">
+                        </div>
+                        <div id="inputs-round-column-formwork" class="formwork-inputs hidden space-y-2">
+                            <input id="fwrc-height-round" type="number" placeholder="Column Height (m)" class="p-2 border rounded-md w-full">
+                            <input id="fwrc-diameter-round" type="number" placeholder="Column Diameter (mm)" class="p-2 border rounded-md w-full">
+                            <input id="fwrc-count-round" type="number" placeholder="Quantity" class="p-2 border rounded-md w-full">
+                        </div>
+                        <div id="inputs-footing-formwork" class="formwork-inputs hidden space-y-2">
+                            <input id="fwf-length" type="number" placeholder="Footing Length (m)" class="p-2 border rounded-md w-full">
+                            <input id="fwf-width" type="number" placeholder="Footing Width (m)" class="p-2 border rounded-md w-full">
+                            <input id="fwf-thickness" type="number" placeholder="Footing Thickness (m)" class="p-2 border rounded-md w-full">
+                            <input id="fwf-count" type="number" placeholder="Quantity" class="p-2 border rounded-md w-full">
+                        </div>
+                        <button id="calculate-formwork" class="mt-4 bg-green-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-green-700 w-full transition-colors">Calculate Formwork</button>
+                        <div id="formwork-reference" class="mt-6"></div>
+                    </div>
+                </div>
+
+                <!-- Flooring & Wall Finishes Accordion (New Section) -->
+                <div class="accordion-item border rounded-lg">
+                    <button class="accordion-header w-full flex justify-between items-center p-4 text-left font-bold text-lg" data-target="panel-finishes">
+                        <div class="flex items-center space-x-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 2v-6m2 9H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V17a2 2 0 01-2 2z"/></svg>
+                            <span>Flooring & Wall Finishes</span>
+                        </div>
+                        <svg class="chevron h-6 w-6 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                    </button>
+                    <div id="panel-finishes" class="accordion-panel px-4">
+                        <div class="mb-4">
+                            <label for="finishes-type-selector" class="block text-sm font-medium text-gray-700 mb-1">Finish Type:</label>
+                            <select id="finishes-type-selector" class="p-2 border rounded-md w-full bg-white">
+                                <option value="ceramic-tile">Ceramic Tile Flooring</option>
+                                <option value="granite-tile">Granite Tile Flooring</option>
+                                <option value="wood-plank-flooring">Wood Plank Flooring</option>
+                                <option value="wall-painting">Wall Painting</option>
+                            </select>
+                        </div>
+                        <div id="inputs-ceramic-tile" class="finishes-inputs space-y-2">
+                            <input id="ct-length" type="number" placeholder="Area Length (m)" class="p-2 border rounded-md w-full">
+                            <input id="ct-width" type="number" placeholder="Area Width (m)" class="p-2 border rounded-md w-full">
+                            <select id="ct-size" class="p-2 border rounded-md w-full bg-white">
+                                <option value="30x30">30x30 cm</option>
+                                <option value="40x40">40x40 cm</option>
+                                <option value="60x60">60x60 cm</option>
+                            </select>
+                            <input id="ct-waste" type="number" placeholder="Waste % (e.g., 5)" class="p-2 border rounded-md w-full" value="5">
+                        </div>
+                        <div id="inputs-granite-tile" class="finishes-inputs hidden space-y-2">
+                            <input id="gt-length" type="number" placeholder="Area Length (m)" class="p-2 border rounded-md w-full">
+                            <input id="gt-width" type="number" placeholder="Area Width (m)" class="p-2 border rounded-md w-full">
+                            <select id="gt-size" class="p-2 border rounded-md w-full bg-white">
+                                <option value="60x60">60x60 cm</option>
+                                <option value="80x80">80x80 cm</option>
+                            </select>
+                            <input id="gt-waste" type="number" placeholder="Waste % (e.g., 5)" class="p-2 border rounded-md w-full" value="5">
+                        </div>
+                        <div id="inputs-wood-plank-flooring" class="finishes-inputs hidden space-y-2">
+                            <input id="wpf-length" type="number" placeholder="Area Length (m)" class="p-2 border rounded-md w-full">
+                            <input id="wpf-width" type="number" placeholder="Area Width (m)" class="p-2 border rounded-md w-full">
+                            <input id="wpf-waste" type="number" placeholder="Waste % (e.g., 5)" class="p-2 border rounded-md w-full" value="5">
+                        </div>
+                        <div id="inputs-wall-painting" class="finishes-inputs hidden space-y-2">
+                            <input id="wp-length" type="number" placeholder="Wall Length (m)" class="p-2 border rounded-md w-full">
+                            <input id="wp-height" type="number" placeholder="Wall Height (m)" class="p-2 border rounded-md w-full">
+                            <input id="wp-coats" type="number" placeholder="Number of Paint Coats" class="p-2 border rounded-md w-full" value="2">
+                            <input id="wp-coverage" type="number" placeholder="Paint Coverage (sq.m./L)" class="p-2 border rounded-md w-full" value="25">
+                        </div>
+                        <button id="calculate-finishes" class="mt-4 bg-green-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-green-700 w-full transition-colors">Calculate Finishes</button>
+                        <div id="finishes-reference" class="mt-6"></div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Results Section -->
+            <div id="results" class="p-4 mt-4">
+                <h2 class="text-2xl font-semibold mb-4 border-t pt-6 text-gray-700">Bill of Materials</h2>
+                <div id="estimate-list" class="space-y-3">
+                    <!-- Cards will be added here -->
+                    <div class="text-center text-gray-500 py-8">Your items will appear here...</div>
+                </div>
+                <div id="summary" class="mt-6 pt-4 border-t">
+                     <div class="space-y-2 font-medium">
+                        <div class="flex justify-between">
+                            <span>Subtotal Materials:</span>
+                            <span id="subtotal-materials">PHP 0.00</span>
+                        </div>
+                         <div class="flex justify-between items-center">
+                            <span>Labor Cost (<input type="number" id="labor-percent" value="40" class="w-12 text-center border rounded-md mx-1">%):</span>
+                            <span id="total-labor">PHP 0.00</span>
+                        </div>
+                         <div class="flex justify-between text-xl font-bold pt-2 border-t mt-2">
+                            <span>Grand Total:</span>
+                            <span id="grand-total" class="text-green-600">PHP 0.00</span>
+                        </div>
+                     </div>
+                </div>
+                 <button id="clear-estimate" class="mt-6 bg-red-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-red-600 w-full transition-colors">Clear All</button>
+            </div>
+        </main>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+        const unitCosts = {
+            cement: 240, sand: 1200, gravel: 1300,
+            chb10: 14, chb15: 16, chb20: 18,
+            rebar10: 235, rebar12: 340, rebar16: 598, 
+            rebar20: 935, rebar25: 1460,
+            commonBrick: 6,
+            tieWire: 80,
+            excavation: 350, // Placeholder cost per cubic meter for excavation (loose)
+            fillMaterial: 800, // Placeholder cost per cubic meter for backfill material (compacted)
+            formworkPlywoodSqM: 450, // Cost for plywood formwork per sq.m.
+            formworkPhenolicSqM: 650, // Cost for phenolic board formwork per sq.m.
+            ceramicTileSqM: 180, // Cost per sq.m. for ceramic tile
+            graniteTileSqM: 450, // Cost per sq.m. for granite tile
+            woodPlankSqM: 600, // Cost per sq.m. for wood plank flooring
+            tileAdhesiveBag: 250, // Cost per bag of tile adhesive
+            groutKg: 80, // Cost per kg of grout
+            paintLiter: 300, // Cost per liter of paint
+            paintPrimerLiter: 250 // Cost per liter of paint primer
+        };
+
+        const constants = {
+            concrete: {
+                'A': { cement: 9.0, sand: 0.5, gravel: 1.0 },
+                'B': { cement: 7.5, sand: 0.5, gravel: 1.0 },
+                'C': { cement: 6.0, sand: 0.5, gravel: 1.0 }
+            },
+            masonry: {
+                chb: 12.5,
+                chbHeight: 0.20, // meters
+                commonBrick: 50,
+                mortar: {
+                    '10': { cement: 0.528, sand: 0.044 },
+                    '15': { cement: 0.864, sand: 0.072 },
+                    '20': { cement: 1.296, sand: 0.108 }
+                },
+                chbCoreFill: {
+                    '10': 0.0045, 
+                    '15': 0.0068, 
+                    '20': 0.0090
+                },
+                brickMortar: 0.015
+            },
+            plaster: {
+                'A': { cement: 18.0, sand: 1.0 },
+                'B': { cement: 12.0, sand: 1.0 },
+                'C': { cement: 9.0, sand: 1.0 }
+            },
+            steel: {
+                tieWireFactor: 0.015,
+                concreteCover: 40, 
+                hookLengthFactor: 12, 
+                lapSpliceFactor: 60,
+                weights: { 
+                    '10': 0.617, '12': 0.888, '16': 1.578,
+                    '20': 2.466, '25': 3.853
+                }
+            },
+            earthworks: {
+                bulkingFactor: 1.25, // Common bulking factor for excavated soil (volume increases)
+                shrinkageFactor: 0.90 // Common shrinkage factor for backfill material (volume decreases when compacted)
+            },
+            finishes: {
+                tileAdhesiveCoverage: 5, // sq.m. per bag (standard)
+                groutCoverage: 0.2, // kg per sq.m. (rough estimate)
+                paintPrimerCoats: 1 // Default primer coats
+            }
+        };
+
+        let estimateItems = [];
+        
+        const accordionHeaders = document.querySelectorAll('.accordion-header');
+        const estimateList = document.getElementById('estimate-list');
+        const concreteTypeSelector = document.getElementById('concrete-type-selector');
+        const steelTypeSelector = document.getElementById('steel-type-selector');
+        const masonryTypeSelector = document.getElementById('masonry-type-selector');
+        const earthworksTypeSelector = document.getElementById('earthworks-type-selector'); 
+        const formworkTypeSelector = document.getElementById('formwork-type-selector'); 
+        const formworkMaterialSelector = document.getElementById('formwork-material-selector');
+        const finishesTypeSelector = document.getElementById('finishes-type-selector'); 
+        
+        accordionHeaders.forEach(header => {
+            header.addEventListener('click', () => {
+                const targetPanel = document.getElementById(header.dataset.target);
+                const isActive = header.classList.contains('active');
+                accordionHeaders.forEach(h => {
+                    h.classList.remove('active');
+                    document.getElementById(h.dataset.target).classList.remove('active');
+                });
+                if (!isActive) {
+                    header.classList.add('active');
+                    targetPanel.classList.add('active');
+                }
+            });
+        });
+
+        concreteTypeSelector.addEventListener('change', (e) => {
+            document.querySelectorAll('.concrete-inputs').forEach(div => div.classList.add('hidden'));
+            document.getElementById(`inputs-${e.target.value}`).classList.remove('hidden');
+        });
+
+        steelTypeSelector.addEventListener('change', (e) => {
+            document.querySelectorAll('.steel-inputs').forEach(div => div.classList.add('hidden'));
+            document.getElementById(`inputs-${e.target.value}`).classList.remove('hidden');
+        });
+        
+        masonryTypeSelector.addEventListener('change', (e) => {
+            document.querySelectorAll('.masonry-inputs').forEach(div => div.classList.add('hidden'));
+            document.getElementById(`inputs-${e.target.value}`).classList.remove('hidden');
+        });
+
+        earthworksTypeSelector.addEventListener('change', (e) => {
+            document.querySelectorAll('.earthworks-inputs').forEach(div => div.classList.add('hidden'));
+            document.getElementById(`inputs-${e.target.value}`).classList.remove('hidden');
+        });
+
+        formworkTypeSelector.addEventListener('change', (e) => {
+            document.querySelectorAll('.formwork-inputs').forEach(div => div.classList.add('hidden'));
+            document.getElementById(`inputs-${e.target.value}`).classList.remove('hidden');
+        });
+
+        // Fixed: Use e.target.value directly as the ID in HTML uses hyphens
+        finishesTypeSelector.addEventListener('change', (e) => {
+            document.querySelectorAll('.finishes-inputs').forEach(div => div.classList.add('hidden'));
+            document.getElementById(`inputs-${e.target.value}`).classList.remove('hidden');
+        });
+        
+        document.getElementById('calculate-concrete').addEventListener('click', handleConcreteCalculation);
+        document.getElementById('calculate-steel').addEventListener('click', handleSteelCalculation);
+        document.getElementById('calculate-masonry').addEventListener('click', handleMasonryCalculation);
+        document.getElementById('calculate-earthworks').addEventListener('click', handleEarthworksCalculation); 
+        document.getElementById('calculate-formwork').addEventListener('click', handleFormworkCalculation); 
+        document.getElementById('calculate-finishes').addEventListener('click', handleFinishesCalculation); 
+        document.getElementById('clear-estimate').addEventListener('click', clearAll);
+        document.getElementById('labor-percent').addEventListener('input', renderResults);
+        
+        function displayReferenceTable(containerId, title, factors, procedure) {
+            const container = document.getElementById(containerId);
+            let tableHTML = `
+                <div class="border rounded-lg p-4 mt-6 bg-gray-50">
+                    <h3 class="font-semibold text-lg mb-2">${title}</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <h4 class="font-semibold mb-1">Calculation Factors</h4>
+                            <div class="text-sm space-y-1">`;
+            factors.forEach(row => {
+                tableHTML += `<div class="flex justify-between border-b pb-1"><span class="text-gray-600">${row.description}</span><span class="font-medium">${row.value} ${row.unit}</span></div>`;
+            });
+            tableHTML += `
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold mb-1">Procedure</h4>
+                            <ol class="list-decimal list-inside text-sm space-y-1">`;
+            procedure.forEach(step => {
+                tableHTML += `<li><strong>${step.title}:</strong><br><span class="text-gray-600">${step.formula}</span></li>`;
+            });
+            tableHTML += `
+                                </ol>
+                        </div>
+                    </div>
+                    <div class="text-xs text-gray-500 mt-2 text-right">Reference: Fajardo, M. & NSCP 2015 (Standard Engineering Practices)</div>
+                </div>
+            `;
+            container.innerHTML = tableHTML;
+        }
+        
+        function handleConcreteCalculation() {
+            const type = concreteTypeSelector.value;
+            let totalVolume = 0;
+            const concreteClass = document.getElementById('concrete-class').value;
+            const mix = constants.concrete[concreteClass];
+            let isValid = false;
+
+            if (type === 'rectangular') {
+                const l = parseFloat(document.getElementById('concrete-length').value);
+                const w = parseFloat(document.getElementById('concrete-width').value);
+                const t = parseFloat(document.getElementById('concrete-thickness').value);
+                const q = parseInt(document.getElementById('concrete-count').value);
+                if (!isNaN(l) && !isNaN(w) && !isNaN(t) && !isNaN(q) && l > 0 && w > 0 && t > 0 && q > 0) {
+                    totalVolume = l * w * t * q;
+                    isValid = true;
+                }
+            } else if (type === 'round-column') {
+                const d = parseFloat(document.getElementById('column-diameter').value);
+                const h = parseFloat(document.getElementById('column-height').value);
+                const q = parseInt(document.getElementById('column-count').value);
+                if (!isNaN(d) && !isNaN(h) && !isNaN(q) && d > 0 && h > 0 && q > 0) {
+                    const radius = d / 2;
+                    totalVolume = (Math.PI * Math.pow(radius, 2) * h) * q;
+                    isValid = true;
+                }
+            } else if (type === 'footing') {
+                const l = parseFloat(document.getElementById('footing-length').value);
+                const w = parseFloat(document.getElementById('footing-width').value);
+                const t = parseFloat(document.getElementById('footing-thickness').value);
+                const q = parseInt(document.getElementById('footing-count').value);
+                if (!isNaN(l) && !isNaN(w) && !isNaN(t) && !isNaN(q) && l > 0 && w > 0 && t > 0 && q > 0) {
+                    totalVolume = l * w * t * q;
+                    isValid = true;
+                }
+            } else if (type === 'retaining-wall') {
+                const wl = parseFloat(document.getElementById('wall-length').value);
+                const sh = parseFloat(document.getElementById('stem-height').value);
+                const stTop = parseFloat(document.getElementById('stem-top-thickness').value);
+                const stBot = parseFloat(document.getElementById('stem-bot-thickness').value);
+                const fw = parseFloat(document.getElementById('rw-footing-width').value);
+                const ft = parseFloat(document.getElementById('rw-footing-thickness').value);
+                if (!isNaN(wl) && !isNaN(sh) && !isNaN(stTop) && !isNaN(stBot) && !isNaN(fw) && !isNaN(ft) && wl > 0 && sh > 0 && stTop > 0 && stBot > 0 && fw > 0 && ft > 0) {
+                    const avgStemThick = (stTop + stBot) / 2;
+                    const stemVolume = wl * sh * avgStemThick;
+                    const footingVolume = wl * fw * ft;
+                    totalVolume = stemVolume + footingVolume;
+                    isValid = true;
+                }
+            }
+            
+            if (!isValid) {
+                Swal.fire('Invalid Input', 'Please enter valid, positive numbers for all dimensions and quantities.', 'error'); 
+                return;
+            }
+
+            addEstimateItem('Cement (Concrete)', mix.cement * totalVolume, 'bags', unitCosts.cement);
+            addEstimateItem('Sand (Concrete)', mix.sand * totalVolume, 'cu.m.', unitCosts.sand);
+            addEstimateItem('Gravel (Concrete)', mix.gravel * totalVolume, 'cu.m.', unitCosts.gravel);
+            renderResults();
+
+            const refTitle = `Factors for Class ${concreteClass} Concrete`;
+            const refData = [
+                { description: 'Cement Factor', value: mix.cement, unit: 'bags/cu.m.' },
+                { description: 'Sand Factor', value: mix.sand, unit: 'cu.m./cu.m.' },
+                { description: 'Gravel Factor', value: mix.gravel, unit: 'cu.m./cu.m.' }
+            ];
+             const procedure = [
+                { title: 'Total Concrete Volume', formula: `Volume: ${totalVolume.toFixed(3)} cu.m.`},
+                { title: 'Total Cement', formula: `${totalVolume.toFixed(3)} cu.m. x ${mix.cement} = ${(mix.cement * totalVolume).toFixed(2)} bags` },
+                { title: 'Total Sand', formula: `${totalVolume.toFixed(3)} cu.m. x ${mix.sand} = ${(mix.sand * totalVolume).toFixed(2)} cu.m.` },
+                { title: 'Total Gravel', formula: `${totalVolume.toFixed(3)} cu.m. x ${mix.gravel} = ${(mix.gravel * totalVolume).toFixed(2)} cu.m.` }
+            ];
+            displayReferenceTable('concrete-reference', refTitle, refData, procedure);
+        }
+
+        function handleSteelCalculation() {
+            const type = steelTypeSelector.value;
+            if (type === 'slab') calculateSlabSteel();
+            else if (type === 'suspended-slab') calculateSuspendedSlabSteel();
+            else if (type === 'footing-steel') calculateFootingSteel();
+            else if (type === 'beam') calculateBeamSteel();
+            else if (type === 'suspended-beam') calculateSuspendedBeamSteel();
+            else if (type === 'column') calculateColumnSteel();
+            else if (type === 'spiral-column') calculateSpiralColumnSteel();
+            else if (type === 'retaining-wall-steel') calculateRetainingWallSteel();
+            else if (type === 'stairs') calculateStairsSteel();
+            else if (type === 'dowel') calculateDowelBars();
+            else if (type === 'mat-foundation') calculateMatFoundationSteel();
+        }
+
+        function calculateSlabSteel() {
+            const l = parseFloat(document.getElementById('slab-length').value);
+            const w = parseFloat(document.getElementById('slab-width').value);
+            const dia = parseFloat(document.getElementById('slab-bar-dia').value);
+            const spacing = parseFloat(document.getElementById('slab-spacing').value);
+            const standardLength = parseFloat(document.getElementById('rebar-length-selector').value);
+
+            if (isNaN(l) || isNaN(w) || isNaN(dia) || isNaN(spacing) || l<=0 || w<=0 || dia<=0 || spacing<=0) {
+                Swal.fire('Invalid Input', 'Please enter valid slab dimensions, diameter, and spacing.', 'error'); return;
+            }
+
+            const numBarsLengthwise = Math.ceil(w / (spacing / 1000)) + 1;
+            const lenLengthwise = numBarsLengthwise * l;
+            const numBarsWidthwise = Math.ceil(l / (spacing / 1000)) + 1;
+            const lenWidthwise = numBarsWidthwise * w;
+            const totalLength = lenLengthwise + lenWidthwise;
+            const numPieces = Math.ceil(totalLength / standardLength);
+            const totalWeight = totalLength * (constants.steel.weights[dia] || 0);
+            const tieWire = totalWeight * constants.steel.tieWireFactor;
+
+            addEstimateItem(`${dia}mm Rebar (Slab on Grade)`, numPieces, `pcs (${standardLength}m)`, unitCosts[`rebar${dia}`] || 0);
+            addEstimateItem('G.I. Tie Wire', tieWire, 'kg', unitCosts.tieWire);
+            renderResults();
+        }
+
+        function calculateSuspendedSlabSteel() {
+            const l = parseFloat(document.getElementById('sslab-length').value);
+            const w = parseFloat(document.getElementById('sslab-width').value);
+            const topDia = parseFloat(document.getElementById('sslab-top-dia').value);
+            const topSpacing = parseFloat(document.getElementById('sslab-top-spacing').value);
+            const botDia = parseFloat(document.getElementById('sslab-bot-dia').value);
+            const botSpacing = parseFloat(document.getElementById('sslab-bot-spacing').value);
+            const standardLength = parseFloat(document.getElementById('rebar-length-selector').value);
+
+            if (isNaN(l) || isNaN(w) || isNaN(topDia) || isNaN(topSpacing) || isNaN(botDia) || isNaN(botSpacing)) {
+                Swal.fire('Invalid Input', 'Please enter all valid dimensions and spacings.', 'error'); return;
+            }
+            
+            // Top Bars
+            const numTopLengthwise = Math.ceil(w / (topSpacing / 1000)) + 1;
+            const lenTopLengthwise = numTopLengthwise * l;
+            const numTopWidthwise = Math.ceil(l / (topSpacing / 1000)) + 1;
+            const lenTopWidthwise = numTopWidthwise * w;
+            const totalTopLength = lenTopLengthwise + lenTopWidthwise;
+            const numTopPieces = Math.ceil(totalTopLength / standardLength);
+
+            // Bottom Bars
+            const numBotLengthwise = Math.ceil(w / (botSpacing / 1000)) + 1;
+            const lenBotLengthwise = numBotLengthwise * l;
+            const numBotWidthwise = Math.ceil(l / (botSpacing / 1000)) + 1;
+            const lenBotWidthwise = numBotWidthwise * w;
+            const totalBotLength = lenBotLengthwise + lenBotWidthwise;
+            const numBotPieces = Math.ceil(totalBotLength / standardLength);
+
+            const topWeight = totalTopLength * (constants.steel.weights[topDia] || 0);
+            const botWeight = totalBotLength * (constants.steel.weights[botDia] || 0);
+            const totalTieWire = (topWeight + botWeight) * constants.steel.tieWireFactor;
+
+            addEstimateItem(`${topDia}mm Top Rebar (Susp. Slab)`, numTopPieces, `pcs (${standardLength}m)`, unitCosts[`rebar${topDia}`] || 0);
+            addEstimateItem(`${botDia}mm Bottom Rebar (Susp. Slab)`, numBotPieces, `pcs (${standardLength}m)`, unitCosts[`rebar${botDia}`] || 0);
+            addEstimateItem('G.I. Tie Wire', totalTieWire, 'kg', unitCosts.tieWire);
+            renderResults();
+        }
+
+        function calculateFootingSteel() {
+            const l = parseFloat(document.getElementById('fs-length').value);
+            const w = parseFloat(document.getElementById('fs-width').value);
+            const q = parseInt(document.getElementById('fs-count').value);
+            const dia = parseFloat(document.getElementById('fs-bar-dia').value);
+            const spacing = parseFloat(document.getElementById('fs-spacing').value);
+            const standardLength = parseFloat(document.getElementById('rebar-length-selector').value);
+
+            if (isNaN(l) || isNaN(w) || isNaN(q) || isNaN(dia) || isNaN(spacing) || l<=0 || w<=0 || q<=0 || dia<=0 || spacing<=0) {
+                Swal.fire('Invalid Input', 'Please enter valid footing dimensions, quantity, diameter, and spacing.', 'error'); return;
+            }
+
+            const numBarsLengthwise = (Math.floor(l / (spacing / 1000)) + 1) * q;
+            const lenLengthwise = numBarsLengthwise * w;
+
+            const numBarsWidthwise = (Math.floor(w / (spacing / 1000)) + 1) * q;
+            const lenWidthwise = numBarsWidthwise * l;
+
+            const totalLength = lenLengthwise + lenWidthwise;
+            const numPieces = Math.ceil(totalLength / standardLength);
+            const totalWeight = totalLength * (constants.steel.weights[dia] || 0);
+            const tieWire = totalWeight * constants.steel.tieWireFactor;
+
+            addEstimateItem(`${dia}mm Rebar (Footing)`, numPieces, `pcs (${standardLength}m)`, unitCosts[`rebar${dia}`] || 0);
+            addEstimateItem('G.I. Tie Wire', tieWire, 'kg', unitCosts.tieWire);
+            renderResults();
+        }
+
+        function calculateDowelBars() {
+            const footingThick = parseFloat(document.getElementById('dowel-footing-thick').value);
+            const qty = parseInt(document.getElementById('dowel-qty').value);
+            const dia = parseInt(document.getElementById('dowel-dia').value);
+            const colCount = parseInt(document.getElementById('dowel-col-count').value);
+            const standardLength = parseFloat(document.getElementById('rebar-length-selector').value);
+
+            if (isNaN(footingThick) || isNaN(qty) || isNaN(dia) || isNaN(colCount) || footingThick <= 0 || qty <= 0 || dia <= 0 || colCount <= 0) {
+                Swal.fire('Invalid Input', 'Please fill all fields for dowel bars.', 'error'); return;
+            }
+            
+            const cover = constants.steel.concreteCover / 1000;
+            const anchorage = footingThick - cover;
+            const spliceLength = constants.steel.lapSpliceFactor * (dia / 1000);
+            const cutLength = anchorage + spliceLength;
+
+            const totalLength = cutLength * qty * colCount;
+            const numPieces = Math.ceil(totalLength / standardLength);
+            const totalWeight = totalLength * (constants.steel.weights[dia] || 0);
+            
+            addEstimateItem(`${dia}mm Dowel Bars`, numPieces, `pcs (${standardLength}m)`, unitCosts[`rebar${dia}`] || 0);
+            renderResults();
+
+             const refTitle = `Factors for Column Dowel Bars`;
+            const refFactors = [
+                { description: 'Lap Splice Factor', value: constants.steel.lapSpliceFactor, unit: 'x Dia.' },
+                { description: 'Concrete Cover', value: constants.steel.concreteCover, unit: 'mm' },
+            ];
+            const refProcedure = [
+                { title: 'Anchorage into Footing', formula: `${footingThick}m - ${cover}m = ${anchorage.toFixed(2)} m` },
+                { title: 'Splice Length above Footing', formula: `${constants.steel.lapSpliceFactor} x ${dia/1000}m = ${spliceLength.toFixed(2)} m` },
+                { title: 'Total Cutting Length per Dowel', formula: `${anchorage.toFixed(2)}m + ${spliceLength.toFixed(2)}m = ${cutLength.toFixed(2)} m`},
+                { title: 'Total Length Needed', formula: `${cutLength.toFixed(2)}m x ${qty} x ${colCount} = ${totalLength.toFixed(2)} m`},
+                { title: `Total Pcs (${standardLength}m)`, formula: `Ceil(${totalLength.toFixed(2)}m / ${standardLength}m) = ${numPieces} pcs`},
+            ];
+            displayReferenceTable('steel-reference', refTitle, refFactors, refProcedure);
+        }
+        
+        function calculateBeamSteel() {
+            // This is now for the "Simple Beam"
+            const l = parseFloat(document.getElementById('beam-length').value);
+            const q = parseInt(document.getElementById('beam-count').value);
+            const beamW = parseFloat(document.getElementById('beam-width').value) / 1000; 
+            const beamD = parseFloat(document.getElementById('beam-depth').value) / 1000; 
+            const mainBars = parseInt(document.getElementById('beam-main-bars').value);
+            const mainDia = parseFloat(document.getElementById('beam-main-dia').value);
+            const stirrupDia = parseFloat(document.getElementById('beam-stirrup-dia').value);
+            const stirrupSpacing = document.getElementById('beam-stirrup-spacing').value;
+            const standardLength = parseFloat(document.getElementById('rebar-length-selector').value);
+            
+            if (isNaN(l) || isNaN(q) || isNaN(beamW) || isNaN(beamD) || isNaN(mainBars) || isNaN(mainDia) || isNaN(stirrupDia) || !stirrupSpacing) {
+                Swal.fire('Invalid Input', 'Please fill all fields for simple beam steel.', 'error'); return;
+            }
+
+            const lapSplice = constants.steel.lapSpliceFactor * (mainDia / 1000);
+            const numSplices = Math.max(0, Math.ceil(l / standardLength) - 1);
+            const totalMainLength = (l + (numSplices * lapSplice)) * mainBars * q;
+            const numMainPieces = Math.ceil(totalMainLength / standardLength);
+            
+            const cover = constants.steel.concreteCover / 1000;
+            const hook = constants.steel.hookLengthFactor * (stirrupDia / 1000);
+            const stirrupLength = (2 * (beamW - 2 * cover)) + (2 * (beamD - 2 * cover)) + (2 * hook);
+            
+            let numStirrups;
+            if (stirrupSpacing.includes('@')) {
+                const segments = stirrupSpacing.split(',').map(s => s.trim());
+                let totalStirrupsFromSegments = 0;
+                let remainingLength = l;
+
+                for (let i = 0; i < segments.length; i++) {
+                    const segment = segments[i];
+                    if (segment.includes('@')) {
+                        const parts = segment.split('@');
+                        const qty = parseInt(parts[0]);
+                        const space = parseFloat(parts[1]) / 1000; // Convert mm to meters
+
+                        if (!isNaN(qty) && !isNaN(space) && space > 0) {
+                            if (segment.startsWith('rest@')) {
+                                totalStirrupsFromSegments += Math.ceil(remainingLength / space);
+                                remainingLength = 0;
+                                break;
+                            } else {
+                                const segmentLength = (qty - 1) * space;
+                                totalStirrupsFromSegments += qty;
+                                remainingLength -= segmentLength;
+                                if (remainingLength < 0) remainingLength = 0;
+                            }
+                        } else {
+                             Swal.fire('Invalid Stirrup Spacing Segment', `Invalid format in segment: "${segment}". Please use "qty@spacing" or "rest@spacing".`, 'error');
+                             return;
+                        }
+                    } else if (!isNaN(parseFloat(segment))) {
+                        const singleSpacing = parseFloat(segment) / 1000;
+                        if (singleSpacing > 0) {
+                             numStirrups = (Math.ceil(l / singleSpacing) + 1) * q;
+                             break;
+                        } else {
+                             Swal.fire('Invalid Stirrup Spacing', 'Please enter a valid positive number for stirrup spacing.', 'error');
+                             return;
+                        }
+                    }
+                }
+                if (remainingLength > 0 && segments.every(s => !s.includes('rest@'))) {
+                    const averageSpacing = l / totalStirrupsFromSegments;
+                    numStirrups = (Math.ceil(l / averageSpacing) + 1) * q;
+                } else if (remainingLength === 0) {
+                    numStirrups = totalStirrupsFromSegments * q;
+                } else {
+                    Swal.fire('Stirrup Spacing Error', 'Could not fully parse complex stirrup spacing. Please use a simpler format (e.g., "150") or ensure correct "qty@spacing, rest@spacing" syntax.', 'error');
+                    return;
+                }
+
+            } else { // Simple single numeric spacing
+                const singleSpacing = parseFloat(stirrupSpacing) / 1000; // Convert mm to meters
+                if (isNaN(singleSpacing) || singleSpacing <= 0) {
+                    Swal.fire('Invalid Stirrup Spacing', 'Please enter a valid number for stirrup spacing.', 'error');
+                    return;
+                }
+                numStirrups = (Math.ceil(l / singleSpacing) + 1) * q;
+            }
+
+            const totalStirrupLength = numStirrups * stirrupLength;
+            const numStirrupPieces = Math.ceil(totalStirrupLength / standardLength);
+
+            const mainWeight = totalMainLength * (constants.steel.weights[mainDia] || 0);
+            const stirrupWeight = totalStirrupLength * (constants.steel.weights[stirrupDia] || 0);
+            const totalTieWire = (mainWeight + stirrupWeight) * constants.steel.tieWireFactor;
+
+            addEstimateItem(`${mainDia}mm Main Bars (Simple Beam)`, numMainPieces, `pcs (${standardLength}m)`, unitCosts[`rebar${dia}`] || 0);
+            addEstimateItem(`${stirrupDia}mm Stirrups (Simple Beam)`, numStirrupPieces, `pcs (${standardLength}m)`, unitCosts[`rebar${stirrupDia}`] || 0);
+            addEstimateItem('G.I. Tie Wire', totalTieWire, 'kg', unitCosts.tieWire);
+            renderResults();
+        }
+        
+        function calculateSuspendedBeamSteel() {
+             const l = parseFloat(document.getElementById('s-beam-length').value);
+            const q = parseInt(document.getElementById('s-beam-count').value);
+            const beamW = parseFloat(document.getElementById('s-beam-width').value) / 1000; 
+            const beamD = parseFloat(document.getElementById('s-beam-depth').value) / 1000; 
+
+            const topQty = parseInt(document.getElementById('s-beam-top-qty').value);
+            const topDia = parseFloat(document.getElementById('s-beam-top-dia').value);
+            const exTopQty = parseInt(document.getElementById('s-beam-extra-top-qty').value);
+            const exTopDia = parseFloat(document.getElementById('s-beam-extra-top-dia').value);
+
+            const botQty = parseInt(document.getElementById('s-beam-bot-qty').value);
+            const botDia = parseFloat(document.getElementById('s-beam-bot-dia').value);
+            const exBotQty = parseInt(document.getElementById('s-beam-extra-bot-qty').value);
+            const exBotDia = parseFloat(document.getElementById('s-beam-extra-bot-dia').value);
+            
+            const stirrupDia = parseFloat(document.getElementById('s-beam-stirrup-dia').value);
+            const stirrupSpacing = document.getElementById('s-beam-stirrup-spacing').value;
+            const standardLength = parseFloat(document.getElementById('rebar-length-selector').value);
+            
+            if (isNaN(l) || isNaN(q) || isNaN(beamW) || isNaN(beamD) || isNaN(topQty) || isNaN(topDia) || isNaN(botQty) || isNaN(botDia) || isNaN(stirrupDia) || !stirrupSpacing || isNaN(exTopQty) || isNaN(exTopDia) || isNaN(exBotQty) || isNaN(exBotDia)) {
+                Swal.fire('Invalid Input', 'Please fill all fields for suspended beam steel.', 'error'); return;
+            }
+
+            // Main Bars
+            const topLapSplice = constants.steel.lapSpliceFactor * (topDia / 1000);
+            const topNumSplices = Math.max(0, Math.ceil(l / standardLength) - 1);
+            const totalTopLength = (l + (topNumSplices * topLapSplice)) * topQty * q;
+            const numTopPieces = Math.ceil(totalTopLength / standardLength);
+
+            const botLapSplice = constants.steel.lapSpliceFactor * (botDia / 1000);
+            const botNumSplices = Math.max(0, Math.ceil(l / standardLength) - 1);
+            const totalBotLength = (l + (botNumSplices * botLapSplice)) * botQty * q;
+            const numBotPieces = Math.ceil(totalBotLength / standardLength);
+
+            // Extra Bars
+            const totalExTopLength = (l / 4) * 2 * exTopQty * q;
+            const numExTopPieces = Math.ceil(totalExTopLength / standardLength);
+            const totalExBotLength = (l / 2) * exBotQty * q;
+            const numExBotPieces = Math.ceil(totalExBotLength / standardLength);
+            
+            // Stirrups
+            const cover = constants.steel.concreteCover / 1000;
+            const hook = constants.steel.hookLengthFactor * (stirrupDia / 1000);
+            const stirrupLength = (2 * (beamW - 2 * cover)) + (2 * (beamD - 2 * cover)) + (2 * hook);
+            
+            let numStirrups = 0;
+            const segments = stirrupSpacing.split(',').map(s => s.trim());
+            let lengthCoveredByEnds = 0;
+            segments.forEach(segment => {
+                if(segment.includes('rest@')) return;
+                const parts = segment.split('@');
+                const qty = parseInt(parts[0]);
+                const space = parseInt(parts[1]) / 1000;
+                numStirrups += qty * 2;
+                lengthCoveredByEnds += (qty - 1) * space * 2;
+            });
+
+            const restSegment = segments.find(s => s.includes('rest@'));
+            if(restSegment) {
+                const restSpace = parseInt(restSegment.split('@')[1]) / 1000;
+                const middleLength = l - lengthCoveredByEnds;
+                if(middleLength > 0) {
+                    numStirrups += Math.ceil(middleLength / restSpace) -1;
+                }
+            }
+            numStirrups *= q;
+
+            const totalStirrupLength = numStirrups * stirrupLength;
+            const numStirrupPieces = Math.ceil(totalStirrupLength / standardLength);
+
+            const topWeight = totalTopLength * (constants.steel.weights[topDia] || 0);
+            const exTopWeight = totalExTopLength * (constants.steel.weights[exTopDia] || 0);
+            const botWeight = totalBotLength * (constants.steel.weights[botDia] || 0);
+            const exBotWeight = totalExBotLength * (constants.steel.weights[exBotDia] || 0);
+            const stirrupWeight = totalStirrupLength * (constants.steel.weights[stirrupDia] || 0);
+            const totalTieWire = (topWeight + botWeight + exTopWeight + exBotWeight + stirrupWeight) * constants.steel.tieWireFactor;
+
+            addEstimateItem(`${topDia}mm Main Top Bars`, numTopPieces, `pcs (${standardLength}m)`, unitCosts[`rebar${topDia}`] || 0);
+            addEstimateItem(`${exTopDia}mm Extra Top Bars`, numExTopPieces, `pcs (${standardLength}m)`, unitCosts[`rebar${exTopDia}`] || 0);
+            addEstimateItem(`${botDia}mm Main Bottom Bars`, numBotPieces, `pcs (${standardLength}m)`, unitCosts[`rebar${botDia}`] || 0);
+            addEstimateItem(`${exBotDia}mm Extra Bottom Bars`, numExBotPieces, `pcs (${standardLength}m)`, unitCosts[`rebar${exBotDia}`] || 0);
+            addEstimateItem(`${stirrupDia}mm Stirrups`, numStirrupPieces, `pcs (${standardLength}m)`, unitCosts[`rebar${stirrupDia}`] || 0);
+            addEstimateItem('G.I. Tie Wire', totalTieWire, 'kg', unitCosts.tieWire);
+            renderResults();
+        }
+
+        function calculateColumnSteel() {
+            const numFloors = parseInt(document.getElementById('col-floors').value);
+            const floorHeight = parseFloat(document.getElementById('col-floor-height').value);
+            const beamDepth = parseFloat(document.getElementById('col-beam-depth').value);
+            const q = parseInt(document.getElementById('col-count').value);
+            const colW = parseFloat(document.getElementById('col-width').value) / 1000; 
+            const colD = parseFloat(document.getElementById('col-depth').value) / 1000; 
+
+            const vertQty = parseInt(document.getElementById('col-vert-qty').value);
+            const vertDia = parseFloat(document.getElementById('col-vert-dia').value);
+            
+            const tieDia = parseFloat(document.getElementById('col-tie-dia').value);
+            const tieSpacing = document.getElementById('col-tie-spacing').value;
+            const standardLength = parseFloat(document.getElementById('rebar-length-selector').value);
+            
+            if (isNaN(numFloors) || isNaN(floorHeight) || isNaN(beamDepth) || isNaN(q) || isNaN(colW) || isNaN(colD) || isNaN(vertQty) || isNaN(vertDia) || isNaN(tieDia) || !tieSpacing) {
+                Swal.fire('Invalid Input', 'Please fill all fields for column steel.', 'error'); return;
+            }
+
+            const totalColumnHeight = numFloors * floorHeight;
+            const lapSplice = constants.steel.lapSpliceFactor * (vertDia / 1000);
+            const numSplices = Math.max(0, Math.ceil(totalColumnHeight / standardLength) - 1);
+            const totalVertLength = (totalColumnHeight + (numSplices * lapSplice)) * vertQty * q;
+            const numVertPieces = Math.ceil(totalVertLength / standardLength);
+
+            const cover = constants.steel.concreteCover / 1000;
+            const hook = constants.steel.hookLengthFactor * (tieDia / 1000);
+            const tieLength = (2 * (colW - 2 * cover)) + (2 * (colD - 2 * cover)) + (2 * hook);
+            
+            const clearHeight = floorHeight - beamDepth;
+            let tiesPerFloor = 0;
+            const segments = tieSpacing.split(',').map(s => s.trim());
+            let lengthCoveredByEnds = 0;
+            segments.forEach(segment => {
+                if(segment.includes('rest@')) return;
+                const parts = segment.split('@');
+                const qty = parseInt(parts[0]);
+                const space = parseInt(parts[1]) / 1000;
+                tiesPerFloor += qty * 2;
+                lengthCoveredByEnds += (qty - 1) * space * 2;
+            });
+
+            const restSegment = segments.find(s => s.includes('rest@'));
+            if(restSegment) {
+                const restSpace = parseInt(restSegment.split('@')[1]) / 1000;
+                const middleLength = clearHeight - lengthCoveredByEnds;
+                if(middleLength > 0) {
+                    tiesPerFloor += Math.ceil(middleLength / restSpace) -1;
+                }
+            }
+            const numTies = tiesPerFloor * numFloors * q;
+
+            const totalTieLength = numTies * tieLength;
+            const numTiePieces = Math.ceil(totalTieLength / standardLength);
+
+            const vertWeight = totalVertLength * (constants.steel.weights[vertDia] || 0);
+            const tieWeight = totalTieLength * (constants.steel.weights[tieDia] || 0);
+            const totalTieWire = (vertWeight + tieWeight) * constants.steel.tieWireFactor;
+
+            addEstimateItem(`${vertDia}mm Vertical Bars (Col)`, numVertPieces, `pcs (${standardLength}m)`, unitCosts[`rebar${vertDia}`] || 0);
+            addEstimateItem(`${tieDia}mm Lateral Ties`, numTiePieces, `pcs (${standardLength}m)`, unitCosts[`rebar${tieDia}`] || 0);
+            addEstimateItem('G.I. Tie Wire', totalTieWire, 'kg', unitCosts.tieWire);
+            renderResults();
+            
+            const refTitle = `Factors for Column Reinforcement`;
+            const refFactors = [
+                { description: 'Standard Length', value: standardLength, unit: 'm' },
+                { description: 'Lap Splice Factor', value: constants.steel.lapSpliceFactor, unit: 'x Dia.' },
+                { description: 'Hook Length Factor', value: constants.steel.hookLengthFactor, unit: 'x Dia.' },
+                { description: 'Concrete Cover', value: constants.steel.concreteCover, unit: 'mm' },
+                { description: 'Tie Wire Factor', value: constants.steel.tieWireFactor * 100, unit: '%' }
+            ];
+            const refProcedure = [
+                { title: 'Vertical Bar Splice', formula: `${constants.steel.lapSpliceFactor} x ${vertDia/1000}m = ${lapSplice.toFixed(2)} m` },
+                { title: 'Total Vertical Length', formula: `(${totalColumnHeight}m + (${numSplices} x ${lapSplice.toFixed(2)}m)) x ${vertQty} x ${q} = ${totalVertLength.toFixed(2)} m` },
+                { title: 'Lateral Tie Cut Length', formula: `2(${colW.toFixed(2)} - ${2*cover}) + 2(${colD.toFixed(2)} - ${2*cover}) + 2(${hook.toFixed(2)}) = ${tieLength.toFixed(2)} m` },
+                { title: `Total No. of Ties`, formula: `Based on spacing input: ${numTies/q} per column` },
+                { title: `Total Tie Pcs (${standardLength}m)`, formula: `Ceil((${numTies} x ${tieLength.toFixed(2)}m) / ${standardLength}m) = ${numTiePieces} pcs`},
+            ];
+            displayReferenceTable('steel-reference', refTitle, refFactors, refProcedure);
+        }
+        
+        function calculateSpiralColumnSteel() {
+            const h = parseFloat(document.getElementById('spiral-col-height').value);
+            const colDia = parseFloat(document.getElementById('spiral-col-dia').value) / 1000; // to m
+            const q = parseInt(document.getElementById('spiral-col-count').value);
+            const vertQty = parseInt(document.getElementById('spiral-vert-qty').value);
+            const vertDia = parseFloat(document.getElementById('spiral-vert-dia').value);
+            const spiralDia = parseFloat(document.getElementById('spiral-rebar-dia').value);
+            const pitch = parseFloat(document.getElementById('spiral-pitch').value) / 1000; // to m
+            const standardLength = parseFloat(document.getElementById('rebar-length-selector').value);
+
+            if (isNaN(h) || isNaN(colDia) || isNaN(q) || isNaN(vertQty) || isNaN(vertDia) || isNaN(spiralDia) || isNaN(pitch)) {
+                Swal.fire('Invalid Input', 'Please fill all fields for spiral column steel.', 'error'); return;
+            }
+
+            const lapSplice = constants.steel.lapSpliceFactor * (vertDia / 1000);
+            const numSplices = Math.max(0, Math.ceil(h / standardLength) - 1);
+            const totalVertLength = (h + (numSplices * lapSplice)) * vertQty * q;
+            const numVertPieces = Math.ceil(totalVertLength / standardLength);
+
+            const coreDia = colDia - (2 * constants.steel.concreteCover / 1000);
+            const C = Math.PI * coreDia; // Circumference
+            const numSpirals = (h / pitch) * q;
+            const totalSpiralLength = numSpirals * Math.sqrt(C**2 + pitch**2);
+            const numSpiralPieces = Math.ceil(totalSpiralLength / standardLength);
+
+            const vertWeight = totalVertLength * (constants.steel.weights[vertDia] || 0);
+            const spiralWeight = totalSpiralLength * (constants.steel.weights[spiralDia] || 0);
+            const totalTieWire = (vertWeight + spiralWeight) * constants.steel.tieWireFactor;
+
+            addEstimateItem(`${vertDia}mm Vertical Bars (Spiral Col)`, numVertPieces, `pcs (${standardLength}m)`, unitCosts[`rebar${vertDia}`] || 0);
+            addEstimateItem(`${spiralDia}mm Spiral Hoops`, numSpiralPieces, `pcs (${standardLength}m)`, unitCosts[`rebar${spiralDia}`] || 0);
+            addEstimateItem('G.I. Tie Wire', totalTieWire, 'kg', unitCosts.tieWire);
+            renderResults();
+
+             const refTitle = `Factors for Spiral Column Reinforcement`;
+            const refFactors = [
+                { description: 'Standard Length', value: standardLength, unit: 'm' },
+                { description: 'Lap Splice Factor', value: constants.steel.lapSpliceFactor, unit: 'x Dia.' },
+                { description: 'Concrete Cover', value: constants.steel.concreteCover, unit: 'mm' },
+            ];
+            const refProcedure = [
+                { title: 'Vertical Bar Splice', formula: `${constants.steel.lapSpliceFactor} x ${vertDia/1000}m = ${lapSplice.toFixed(2)} m` },
+                { title: 'Total Vertical Length', formula: `(${h}m + (${numSplices} x ${lapSplice.toFixed(2)}m)) x ${vertQty} x ${q} = ${totalVertLength.toFixed(2)} m` },
+                { title: 'Core Circumference', formula: `PI x (${colDia}m - 2*${cover}) = ${C.toFixed(2)} m`},
+                { title: 'Total Spiral Length', formula: `(${h}m / ${pitch}m) x ${q} x sqrt(${C.toFixed(2)}^2 + ${pitch}^2) = ${totalSpiralLength.toFixed(2)} m`},
+                { title: `Total Spiral Pcs (${standardLength}m)`, formula: `Ceil(${totalSpiralLength.toFixed(2)}m / ${standardLength}m) = ${numSpiralPieces} pcs`},
+            ];
+            displayReferenceTable('steel-reference', refTitle, refFactors, refProcedure);
+        }
+
+        function calculateRetainingWallSteel() {
+             const l = parseFloat(document.getElementById('rws-length').value);
+             const h = parseFloat(document.getElementById('rws-height').value);
+             const footW = parseFloat(document.getElementById('rws-foot-width').value);
+             const standardLength = parseFloat(document.getElementById('rebar-length-selector').value);
+
+             const vertDia = parseFloat(document.getElementById('rws-vert-dia').value);
+             const vertSpace = parseFloat(document.getElementById('rws-vert-spacing').value);
+             const horzDia = parseFloat(document.getElementById('rws-horz-dia').value);
+             const horzSpace = parseFloat(document.getElementById('rws-horz-spacing').value);
+             const footTransDia = parseFloat(document.getElementById('rws-foot-trans-dia').value);
+             const footTransSpace = parseFloat(document.getElementById('rws-foot-trans-spacing').value);
+             const footLongDia = parseFloat(document.getElementById('rws-foot-long-dia').value);
+             const footLongSpace = parseFloat(document.getElementById('rws-foot-long-spacing').value);
+
+            if (isNaN(l) || isNaN(h) || isNaN(footW) || isNaN(vertDia) || isNaN(vertSpace) || isNaN(horzDia) || isNaN(horzSpace) || isNaN(footTransDia) || isNaN(footTransSpace) || isNaN(footLongDia) || isNaN(footLongSpace)) {
+                Swal.fire('Invalid Input', 'Please fill all fields for retaining wall steel.', 'error'); return;
+            }
+
+            const numVert = Math.ceil(l / (vertSpace / 1000)) + 1;
+            const lenVert = (h + footW) * numVert; 
+            const pcsVert = Math.ceil(lenVert / standardLength);
+
+            const numHorz = Math.ceil(h / (horzSpace / 1000)) + 1;
+            const lenHorz = numHorz * l;
+            const pcsHorz = Math.ceil(lenHorz / standardLength);
+            
+            const numFootTrans = Math.ceil(l / (footTransSpace / 1000)) + 1;
+            const lenFootTrans = numFootTrans * footW;
+            const pcsFootTrans = Math.ceil(lenFootTrans / standardLength);
+
+            const numFootLong = Math.ceil(footW / (footLongSpace / 1000)) + 1;
+            const lenFootLong = numFootLong * l;
+            const pcsFootLong = Math.ceil(lenFootLong / standardLength);
+
+            const vertWeight = lenVert * (constants.steel.weights[vertDia] || 0);
+            const horzWeight = lenHorz * (constants.steel.weights[horzDia] || 0);
+            const footTransWeight = lenFootTrans * (constants.steel.weights[footTransDia] || 0);
+            const footLongWeight = lenFootLong * (constants.steel.weights[footLongDia] || 0);
+            const totalTieWire = (vertWeight + horzWeight + footTransWeight + footLongWeight) * constants.steel.tieWireFactor;
+
+            addEstimateItem(`${vertDia}mm Vertical Bars (RW)`, pcsVert, `pcs (${standardLength}m)`, unitCosts[`rebar${vertDia}`] || 0);
+            addEstimateItem(`${horzDia}mm Horizontal Bars (RW)`, pcsHorz, `pcs (${standardLength}m)`, unitCosts[`rebar${horzDia}`] || 0);
+            addEstimateItem(`${footTransDia}mm Footing Transverse (RW)`, pcsFootTrans, `pcs (${standardLength}m)`, unitCosts[`rebar${footTransDia}`] || 0);
+            addEstimateItem(`${footLongDia}mm Footing Longitudinal (RW)`, pcsFootLong, `pcs (${standardLength}m)`, unitCosts[`rebar${footLongDia}`] || 0);
+            addEstimateItem('G.I. Tie Wire', totalTieWire, 'kg', unitCosts.tieWire);
+            renderResults();
+            
+            const refTitle = `Factors for Retaining Wall Reinforcement`;
+            const refFactors = [
+                { description: 'Standard Length', value: standardLength, unit: 'm' }
+            ];
+            const refProcedure = [
+                { title: 'No. of Stem Vertical Bars', formula: `Ceil(${l}m / ${vertSpace/1000}m) + 1 = ${numVert} pcs` },
+                { title: 'No. of Stem Horizontal Bars', formula: `Ceil(${h}m / ${horzSpace/1000}m) + 1 = ${numHorz} pcs` },
+                { title: 'No. of Footing Transverse', formula: `Ceil(${l}m / ${footTransSpace/1000}m) + 1 = ${numFootTrans} pcs` },
+                { title: 'No. of Footing Longitudinal', formula: `Ceil(${footW}m / ${footLongSpace/1000}m) + 1 = ${numFootLong} pcs` },
+            ];
+            displayReferenceTable('steel-reference', refTitle, refFactors, refProcedure);
+        }
+        
+        function calculateStairsSteel() {
+            const w = parseFloat(document.getElementById('stairs-width').value);
+            const run = parseFloat(document.getElementById('stairs-run').value);
+            const rise = parseFloat(document.getElementById('stairs-rise').value);
+            const flights = parseInt(document.getElementById('stairs-flights').value);
+            const mainDia = parseInt(document.getElementById('stairs-main-dia').value);
+            const mainSpacing = parseFloat(document.getElementById('stairs-main-spacing').value);
+            const tempDia = parseInt(document.getElementById('stairs-temp-dia').value);
+            const tempSpacing = parseFloat(document.getElementById('stairs-temp-spacing').value);
+            const standardLength = parseFloat(document.getElementById('rebar-length-selector').value);
+
+            if (isNaN(w) || isNaN(run) || isNaN(rise) || isNaN(flights) || isNaN(mainDia) || isNaN(mainSpacing) || isNaN(tempDia) || isNaN(tempSpacing)) {
+                Swal.fire('Invalid Input', 'Please fill all fields for stairs steel.', 'error'); return;
+            }
+
+            const inclinedLength = Math.sqrt(Math.pow(run, 2) + Math.pow(rise, 2));
+            
+            const numMain = Math.ceil(w / (mainSpacing / 1000)) + 1;
+            const totalMainLength = numMain * inclinedLength * flights;
+            const numMainPieces = Math.ceil(totalMainLength / standardLength);
+
+            const numTemp = Math.ceil(inclinedLength / (tempSpacing / 1000)) + 1;
+            const totalTempLength = numTemp * w * flights;
+            const numTempPieces = Math.ceil(totalTempLength / standardLength);
+
+            const mainWeight = totalMainLength * (constants.steel.weights[mainDia] || 0);
+            const tempWeight = totalTempLength * (constants.steel.weights[tempDia] || 0);
+            const totalTieWire = (mainWeight + tempWeight) * constants.steel.tieWireFactor;
+
+            addEstimateItem(`${mainDia}mm Main Bars (Stairs)`, numMainPieces, `pcs (${standardLength}m)`, unitCosts[`rebar${dia}`] || 0);
+            addEstimateItem(`${tempDia}mm Temp. Bars (Stairs)`, numTempPieces, `pcs (${standardLength}m)`, unitCosts[`rebar${tempDia}`] || 0);
+            addEstimateItem('G.I. Tie Wire', totalTieWire, 'kg', unitCosts.tieWire);
+            renderResults();
+            
+            const refTitle = `Factors for Stairs Reinforcement`;
+            const refFactors = [
+                { description: 'Standard Length', value: standardLength, unit: 'm' }
+            ];
+            const refProcedure = [
+                { title: 'Inclined Length (Waist)', formula: `sqrt(${run}^2 + ${rise}^2) = ${inclinedLength.toFixed(2)} m` },
+                { title: 'No. of Main Bars', formula: `(Ceil(${w}m / ${mainSpacing/1000}m) + 1) = ${numMain} pcs` },
+                { title: 'Total Main Bar Length', formula: `${numMain} x ${inclinedLength.toFixed(2)}m x ${flights} = ${totalMainLength.toFixed(2)} m` },
+                { title: 'No. of Temp. Bars', formula: `(Ceil(${inclinedLength.toFixed(2)}m / ${tempSpacing/1000}m) + 1) = ${numTemp} pcs` },
+                { title: 'Total Temp. Bar Length', formula: `${numTemp} x ${w}m x ${flights} = ${totalTempLength.toFixed(2)} m` }
+            ];
+            displayReferenceTable('steel-reference', refTitle, refFactors, refProcedure);
+        }
+
+        function calculateMatFoundationSteel() {
+            const l = parseFloat(document.getElementById('mat-length').value);
+            const w = parseFloat(document.getElementById('mat-width').value);
+            const topDia = parseFloat(document.getElementById('mat-top-dia').value);
+            const topSpacing = parseFloat(document.getElementById('mat-top-spacing').value);
+            const botDia = parseFloat(document.getElementById('mat-bot-dia').value);
+            const botSpacing = parseFloat(document.getElementById('mat-bot-spacing').value);
+            const standardLength = parseFloat(document.getElementById('rebar-length-selector').value);
+
+            if (isNaN(l) || isNaN(w) || isNaN(topDia) || isNaN(topSpacing) || isNaN(botDia) || isNaN(botSpacing) || l <= 0 || w <= 0 || topDia <= 0 || topSpacing <= 0 || botDia <= 0 || botSpacing <= 0) {
+                Swal.fire('Invalid Input', 'Please enter valid dimensions and spacings for Mat Foundation Steel.', 'error');
+                return;
+            }
+
+            // Top bars (both directions)
+            const numTopBarsLong = Math.ceil(w / (topSpacing / 1000)) + 1; // Bars along length
+            const lenTopLong = numTopBarsLong * l;
+            const numTopBarsTrans = Math.ceil(l / (topSpacing / 1000)) + 1; // Bars along width
+            const lenTopTrans = numTopBarsTrans * w;
+            const totalTopLength = lenTopLong + lenTopTrans;
+            const numTopPieces = Math.ceil(totalTopLength / standardLength);
+
+            // Bottom bars (both directions)
+            const numBotBarsLong = Math.ceil(w / (botSpacing / 1000)) + 1; // Bars along length
+            const lenBotLong = numBotBarsLong * l;
+            const numBotBarsTrans = Math.ceil(l / (botSpacing / 1000)) + 1; // Bars along width
+            const lenBotTrans = numBotBarsTrans * w;
+            const totalBotLength = lenBotLong + lenBotTrans;
+            const numBotPieces = Math.ceil(totalBotLength / standardLength);
+
+            const topWeight = totalTopLength * (constants.steel.weights[topDia] || 0);
+            const botWeight = totalBotLength * (constants.steel.weights[botDia] || 0);
+            const totalTieWire = (topWeight + botWeight) * constants.steel.tieWireFactor;
+
+            addEstimateItem(`${topDia}mm Top Rebar (Mat Foundation)`, numTopPieces, `pcs (${standardLength}m)`, unitCosts[`rebar${topDia}`] || 0);
+            addEstimateItem(`${botDia}mm Bottom Rebar (Mat Foundation)`, numBotPieces, `pcs (${standardLength}m)`, unitCosts[`rebar${botDia}`] || 0);
+            addEstimateItem('G.I. Tie Wire', totalTieWire, 'kg', unitCosts.tieWire);
+            renderResults();
+
+            const refTitle = `Factors for Mat Foundation Reinforcement`;
+            const refFactors = [
+                { description: 'Standard Length', value: standardLength, unit: 'm' },
+                { description: 'Tie Wire Factor', value: constants.steel.tieWireFactor * 100, unit: '%' }
+            ];
+            const refProcedure = [
+                { title: 'Total Top Bar Length', formula: `(Ceil(${w}m / ${topSpacing/1000}m) + 1) * ${l}m + (Ceil(${l}m / ${topSpacing/1000}m) + 1) * ${w}m = ${totalTopLength.toFixed(2)} m` },
+                { title: `Total Top Bar Pcs (${standardLength}m)`, formula: `Ceil(${totalTopLength.toFixed(2)}m / ${standardLength}m) = ${numTopPieces} pcs`},
+                { title: 'Total Bottom Bar Length', formula: `(Ceil(${w}m / ${botSpacing/1000}m) + 1) * ${l}m + (Ceil(${l}m / ${botSpacing/1000}m) + 1) * ${w}m = ${totalBotLength.toFixed(2)} m` },
+                { title: `Total Bottom Bar Pcs (${standardLength}m)`, formula: `Ceil(${totalBotLength.toFixed(2)}m / ${standardLength}m) = ${numBotPieces} pcs`},
+            ];
+            displayReferenceTable('steel-reference', refTitle, refFactors, refProcedure);
+        }
+        
+        function handleMasonryCalculation() {
+            const type = masonryTypeSelector.value;
+            if (type === 'chb-wall') calculateChbWall();
+            else if (type === 'chb-filling') calculateChbFilling();
+            else if (type === 'brick-wall') calculateBrickWall();
+            else if (type === 'plastering') calculatePlastering();
+            else if (type === 'chb-rebar') calculateChbRebar();
+        }
+
+        function calculateChbRebar() {
+            const l = parseFloat(document.getElementById('chb-rebar-length').value);
+            const h = parseFloat(document.getElementById('chb-rebar-height').value);
+            const vertDia = parseInt(document.getElementById('chb-vert-dia').value);
+            const vertSpace = parseFloat(document.getElementById('chb-vert-spacing').value);
+            const horzDia = parseInt(document.getElementById('chb-horz-dia').value);
+            const horzLayers = parseInt(document.getElementById('chb-horz-layers').value);
+            const standardLength = parseFloat(document.getElementById('rebar-length-selector').value);
+
+            if (isNaN(l) || isNaN(h) || isNaN(vertDia) || isNaN(vertSpace) || isNaN(horzDia) || isNaN(horzLayers) || horzLayers <= 0) {
+                Swal.fire('Invalid Input', 'Please fill all fields for CHB reinforcement. Layers must be greater than 0.', 'error'); return;
+            }
+            
+            const numVert = Math.ceil(l / (vertSpace/1000)) + 1;
+            const totalVertLength = numVert * h;
+            const numVertPieces = Math.ceil(totalVertLength / standardLength);
+
+            const numHorz = Math.floor((h / constants.masonry.chbHeight) / horzLayers);
+            const totalHorzLength = numHorz * l;
+            const numHorzPieces = Math.ceil(totalHorzLength / standardLength);
+
+            const vertWeight = totalVertLength * (constants.steel.weights[vertDia] || 0);
+            const horzWeight = totalHorzLength * (constants.steel.weights[horzDia] || 0);
+            const totalTieWire = (vertWeight + horzWeight) * constants.steel.tieWireFactor;
+            
+            addEstimateItem(`${vertDia}mm Vertical Bars (CHB)`, numVertPieces, `pcs (${standardLength}m)`, unitCosts[`rebar${dia}`] || 0);
+            addEstimateItem(`${horzDia}mm Horizontal Bars (CHB)`, numHorzPieces, `pcs (${standardLength}m)`, unitCosts[`rebar${horzDia}`] || 0);
+            addEstimateItem('G.I. Tie Wire', totalTieWire, 'kg', unitCosts.tieWire);
+            renderResults();
+
+             const refTitle = `Factors for CHB Wall Reinforcement`;
+            const refFactors = [
+                { description: 'Standard Length', value: standardLength, unit: 'm' },
+                { description: 'CHB Height', value: constants.masonry.chbHeight, unit: 'm' },
+            ];
+            const refProcedure = [
+                { title: 'No. of Vertical Bars', formula: `Ceil(${l}m / ${vertSpace/1000}m) + 1 = ${numVert} pcs` },
+                { title: 'Total Vertical Length', formula: `${numVert} x ${h}m = ${totalVertLength.toFixed(2)} m` },
+                { title: 'No. of Horizontal Layers', formula: `Floor((${h}m / ${constants.masonry.chbHeight}m) / ${horzLayers}) = ${numHorz} layers` },
+                { title: 'Total Horizontal Length', formula: `${numHorz} x ${l}m = ${totalHorzLength.toFixed(2)} m` },
+            ];
+            displayReferenceTable('masonry-reference', refTitle, refFactors, refProcedure);
+        }
+
+        function calculateChbWall() {
+            const length = parseFloat(document.getElementById('chb-wall-length').value);
+            const height = parseFloat(document.getElementById('chb-wall-height').value);
+            const chbSize = document.getElementById('chb-wall-size').value;
+
+            if (isNaN(length) || isNaN(height) || length <= 0 || height <= 0) {
+                Swal.fire('Invalid Input', 'Please enter valid wall dimensions.', 'error'); return;
+            }
+            
+            const area = length * height;
+            const mortarMix = constants.masonry.mortar[chbSize];
+            const chbType = `chb${chbSize}`;
+
+            addEstimateItem(`CHB ${chbSize}cm`, constants.masonry.chb * area, 'pcs', unitCosts[chbType]);
+            addEstimateItem('Cement (CHB Laying)', mortarMix.cement * area, 'bags', unitCosts.cement);
+            addEstimateItem('Sand (CHB Laying)', mortarMix.sand * area, 'cu.m.', unitCosts.sand);
+            renderResults();
+
+            const refTitle = `Factors for ${chbSize}cm CHB Wall Laying`;
+            const refFactors = [
+                { description: 'CHB per Area', value: constants.masonry.chb, unit: 'pcs/sq.m.' },
+                { description: 'Cement Mortar', value: mortarMix.cement, unit: 'bags/sq.m.' },
+                { description: 'Sand Mortar', value: mortarMix.sand, unit: 'cu.m./sq.m.' }
+            ];
+            const refProcedure = [
+                { title: 'Total Wall Area', formula: `${length}m x ${height}m = ${area.toFixed(2)} sq.m.` },
+                { title: 'Total CHB', formula: `${area.toFixed(2)} sq.m. x ${constants.masonry.chb} = ${(area * constants.masonry.chb).toFixed(2)} pcs` },
+                { title: 'Total Cement', formula: `${area.toFixed(2)} sq.m. x ${mortarMix.cement} = ${(area * mortarMix.cement).toFixed(2)} bags` },
+                { title: 'Total Sand', formula: `${area.toFixed(2)} sq.m. x ${mortarMix.sand} = ${(area * mortarMix.sand).toFixed(2)} cu.m.` }
+            ];
+            displayReferenceTable('masonry-reference', refTitle, refFactors, refProcedure);
+        }
+
+        function calculatePlastering() {
+            const length = parseFloat(document.getElementById('plaster-length').value);
+            const height = parseFloat(document.getElementById('plaster-height').value);
+            const thickness = parseFloat(document.getElementById('plaster-thickness').value);
+            const plasterMixClass = document.getElementById('plaster-mix').value;
+
+            if (isNaN(length) || isNaN(height) || isNaN(thickness) || length <= 0 || height <= 0 || thickness <= 0) {
+                Swal.fire('Invalid Input', 'Please enter valid plaster dimensions and thickness.', 'error'); return;
+            }
+            
+            const area = length * height;
+            const thicknessInMeters = thickness / 1000;
+            const volume = area * thicknessInMeters;
+            const mix = constants.plaster[plasterMixClass];
+
+            addEstimateItem('Cement (Plaster)', mix.cement * volume, 'bags', unitCosts.cement);
+            addEstimateItem('Sand (Plaster)', mix.sand * volume, 'cu.m.', unitCosts.sand);
+            renderResults();
+
+            const refTitle = `Factors for Class ${plasterMixClass} Plaster`;
+            const refFactors = [
+                { description: 'Cement Factor', value: mix.cement, unit: 'bags/cu.m. of mortar' },
+                { description: 'Sand Factor', value: mix.sand, unit: 'cu.m./cu.m. of mortar' }
+            ];
+            const refProcedure = [
+                { title: 'Total Plaster Volume', formula: `${area.toFixed(2)} sq.m. x ${thicknessInMeters}m = ${volume.toFixed(4)} cu.m.` },
+                { title: 'Total Cement', formula: `${volume.toFixed(4)} cu.m. x ${mix.cement} = ${(volume * mix.cement).toFixed(2)} bags` },
+                { title: 'Total Sand', formula: `${volume.toFixed(4)} cu.m. x ${mix.sand} = ${(volume * mix.sand).toFixed(2)} cu.m.` }
+            ];
+            displayReferenceTable('masonry-reference', refTitle, refFactors, refProcedure);
+        }
+
+        function calculateChbFilling() {
+            const length = parseFloat(document.getElementById('chb-fill-length').value);
+            const height = parseFloat(document.getElementById('chb-fill-height').value);
+            const chbSize = document.getElementById('chb-fill-size').value;
+            const fillMixClass = document.getElementById('chb-fill-mix').value;
+
+            if (isNaN(length) || isNaN(height) || length <= 0 || height <= 0) {
+                Swal.fire('Invalid Input', 'Please enter a valid wall area.', 'error'); return;
+            }
+
+            const area = length * height;
+            const blockCount = area * constants.masonry.chb;
+            const mortarVolumePerBlock = constants.masonry.chbCoreFill[chbSize];
+            const totalMortarVolume = blockCount * mortarVolumePerBlock;
+            const mix = constants.plaster[fillMixClass]; 
+
+            addEstimateItem('Cement (CHB Fill)', mix.cement * totalMortarVolume, 'bags', unitCosts.cement);
+            addEstimateItem('Sand (CHB Fill)', mix.sand * totalMortarVolume, 'cu.m.', unitCosts.sand);
+            renderResults();
+
+            const refTitle = `Factors for ${chbSize}cm CHB Core Filling (Class ${fillMixClass} Mortar)`;
+            const refFactors = [
+                { description: 'CHB per Area', value: constants.masonry.chb, unit: 'pcs/sq.m.' },
+                { description: 'Mortar Volume per Block', value: mortarVolumePerBlock, unit: 'cu.m./block' },
+                { description: 'Cement Factor', value: mix.cement, unit: 'bags/cu.m. of mortar' },
+                { description: 'Sand Factor', value: mix.sand, unit: 'cu.m./cu.m. of mortar' }
+            ];
+             const refProcedure = [
+                { title: 'Total Wall Area', formula: `${length}m x ${height}m = ${area.toFixed(2)} sq.m.` },
+                { title: 'Total Blocks to Fill', formula: `${area.toFixed(2)} sq.m. x ${constants.masonry.chb} = ${blockCount.toFixed(2)} pcs` },
+                { title: 'Total Mortar Volume', formula: `${blockCount.toFixed(2)} pcs x ${mortarVolumePerBlock} = ${totalMortarVolume.toFixed(4)} cu.m.` },
+                { title: 'Total Cement', formula: `${totalMortarVolume.toFixed(4)} cu.m. x ${mix.cement} = ${(totalMortarVolume * mix.cement).toFixed(2)} bags` },
+                { title: 'Total Sand', formula: `${totalMortarVolume.toFixed(4)} cu.m. x ${mix.sand} = ${(totalMortarVolume * mix.sand).toFixed(2)} cu.m.` }
+            ];
+            displayReferenceTable('masonry-reference', refTitle, refFactors, refProcedure);
+        }
+
+         function calculateBrickWall() {
+            const length = parseFloat(document.getElementById('brick-wall-length').value);
+            const height = parseFloat(document.getElementById('brick-wall-height').value);
+            
+            if (isNaN(length) || isNaN(height) || length <= 0 || height <= 0) {
+                Swal.fire('Invalid Input', 'Please enter valid wall dimensions.', 'error'); return;
+            }
+
+            const area = length * height;
+            const totalMortarVolume = area * constants.masonry.brickMortar;
+            const mix = constants.plaster['B'];
+
+            addEstimateItem('Common Brick', area * constants.masonry.commonBrick, 'pcs', unitCosts.commonBrick);
+            addEstimateItem('Cement (Brick Mortar)', mix.cement * totalMortarVolume, 'bags', unitCosts.cement);
+            addEstimateItem('Sand (Brick Mortar)', mix.sand * totalMortarVolume, 'cu.m.', unitCosts.sand);
+            renderResults();
+
+            const refTitle = 'Factors for Common Brick Wall (Class B Mortar)';
+            const refFactors = [
+                { description: 'Bricks per Area', value: constants.masonry.commonBrick, unit: 'pcs/sq.m.' },
+                { description: 'Mortar Volume per Area', value: constants.masonry.brickMortar, unit: 'cu.m./sq.m.' },
+                { description: 'Cement Factor', value: mix.cement, unit: 'bags/cu.m. of mortar' },
+                { description: 'Sand Factor', value: mix.sand, unit: 'cu.m./cu.m. of mortar' }
+            ];
+            const refProcedure = [
+                { title: 'Total Wall Area', formula: `${length}m x ${height}m = ${area.toFixed(2)} sq.m.` },
+                { title: 'Total Bricks', formula: `${area.toFixed(2)} sq.m. x ${constants.masonry.commonBrick} = ${(area * constants.masonry.commonBrick).toFixed(2)} pcs` },
+                { title: 'Total Mortar Volume', formula: `${area.toFixed(2)} sq.m. x ${constants.masonry.brickMortar} = ${totalMortarVolume.toFixed(4)} cu.m.` },
+                { title: 'Total Cement', formula: `${totalMortarVolume.toFixed(4)} cu.m. x ${mix.cement} = ${(totalMortarVolume * mix.cement).toFixed(2)} bags` },
+                { title: 'Total Sand', formula: `${totalMortarVolume.toFixed(4)} cu.m. x ${mix.sand} = ${(totalMortarVolume * mix.sand).toFixed(2)} cu.m.` }
+            ];
+            displayReferenceTable('masonry-reference', refTitle, refFactors, refProcedure);
+        }
+
+        function handleEarthworksCalculation() {
+            const type = earthworksTypeSelector.value;
+            if (type === 'excavation-rectangular') calculateRectangularExcavation();
+            else if (type === 'backfilling') calculateBackfilling();
+        }
+
+        function calculateRectangularExcavation() {
+            const l = parseFloat(document.getElementById('excavation-length').value);
+            const w = parseFloat(document.getElementById('excavation-width').value);
+            const d = parseFloat(document.getElementById('excavation-depth').value);
+            const q = parseInt(document.getElementById('excavation-count').value);
+
+            if (isNaN(l) || isNaN(w) || isNaN(d) || isNaN(q) || l <= 0 || w <= 0 || d <= 0 || q <= 0) {
+                Swal.fire('Invalid Input', 'Please enter valid, positive numbers for all excavation dimensions and quantity.', 'error');
+                return;
+            }
+
+            const excavatedVolume = l * w * d * q;
+            const volumeAfterBulking = excavatedVolume * constants.earthworks.bulkingFactor;
+            const cost = volumeAfterBulking * unitCosts.excavation;
+
+            addEstimateItem('Excavation Volume (Loose)', volumeAfterBulking, 'cu.m.', unitCosts.excavation);
+            renderResults();
+
+            const refTitle = `Factors for Rectangular Excavation`;
+            const refFactors = [
+                { description: 'Bulking Factor (Loose Soil)', value: constants.earthworks.bulkingFactor, unit: 'x compact volume' },
+                { description: 'Unit Cost', value: unitCosts.excavation, unit: 'PHP/cu.m. (Loose)' }
+            ];
+            const refProcedure = [
+                { title: 'Excavated Volume (Compact)', formula: `${l}m x ${w}m x ${d}m x ${q} = ${excavatedVolume.toFixed(2)} cu.m.` },
+                { title: 'Excavated Volume (Loose)', formula: `${excavatedVolume.toFixed(2)} cu.m. x ${constants.earthworks.bulkingFactor} = ${volumeAfterBulking.toFixed(2)} cu.m.` },
+                { title: 'Estimated Cost', formula: `${volumeAfterBulking.toFixed(2)} cu.m. x PHP ${unitCosts.excavation.toFixed(2)}/cu.m. = PHP ${cost.toFixed(2)}` }
+            ];
+            displayReferenceTable('earthworks-reference', refTitle, refFactors, refProcedure);
+        }
+
+        function calculateBackfilling() {
+            const l = parseFloat(document.getElementById('backfill-length').value);
+            const w = parseFloat(document.getElementById('backfill-width').value);
+            const d = parseFloat(document.getElementById('backfill-depth').value);
+            const q = parseInt(document.getElementById('backfill-count').value);
+
+            if (isNaN(l) || isNaN(w) || isNaN(d) || isNaN(q) || l <= 0 || w <= 0 || d <= 0 || q <= 0) {
+                Swal.fire('Invalid Input', 'Please enter valid, positive numbers for all backfilling dimensions and quantity.', 'error');
+                return;
+            }
+
+            const requiredVolumeCompacted = l * w * d * q;
+            // Volume of loose material needed to achieve the compacted volume
+            const volumeLooseNeeded = requiredVolumeCompacted / constants.earthworks.shrinkageFactor;
+            const cost = volumeLooseNeeded * unitCosts.fillMaterial;
+
+            addEstimateItem('Backfill Material (Loose)', volumeLooseNeeded, 'cu.m.', unitCosts.fillMaterial);
+            renderResults();
+
+            const refTitle = `Factors for Backfilling`;
+            const refFactors = [
+                { description: 'Shrinkage Factor (Compacted Soil)', value: constants.earthworks.shrinkageFactor, unit: 'x loose volume' },
+                { description: 'Unit Cost', value: unitCosts.fillMaterial, unit: 'PHP/cu.m. (Loose)' }
+            ];
+            const refProcedure = [
+                { title: 'Required Volume (Compacted)', formula: `${l}m x ${w}m x ${d}m x ${q} = ${requiredVolumeCompacted.toFixed(2)} cu.m.` },
+                { title: 'Required Volume (Loose)', formula: `${requiredVolumeCompacted.toFixed(2)} cu.m. / ${constants.earthworks.shrinkageFactor} = ${volumeLooseNeeded.toFixed(2)} cu.m.` },
+                { title: 'Estimated Cost', formula: `${volumeLooseNeeded.toFixed(2)} cu.m. x PHP ${unitCosts.fillMaterial.toFixed(2)}/cu.m. = PHP ${cost.toFixed(2)}` }
+            ];
+            displayReferenceTable('earthworks-reference', refTitle, refFactors, refProcedure);
+        }
+
+        function handleFormworkCalculation() {
+            const type = formworkTypeSelector.value;
+            const material = formworkMaterialSelector.value;
+            let unitCostKey = `formwork${material.charAt(0).toUpperCase() + material.slice(1)}SqM`; // e.g., 'formworkPlywoodSqM'
+            let formworkUnitCost = unitCosts[unitCostKey];
+
+            if (isNaN(formworkUnitCost)) {
+                Swal.fire('Error', 'Invalid formwork material selected or unit cost not defined.', 'error');
+                return;
+            }
+
+            let calculatedArea = 0;
+            let isValid = false;
+            let descriptionPrefix = '';
+
+            if (type === 'suspended-slab-formwork') {
+                const l = parseFloat(document.getElementById('fws-length').value);
+                const w = parseFloat(document.getElementById('fws-width').value);
+                const t = parseFloat(document.getElementById('fws-thickness').value);
+                const q = parseInt(document.getElementById('fws-count').value);
+                if (!isNaN(l) && !isNaN(w) && !isNaN(t) && !isNaN(q) && l > 0 && w > 0 && t > 0 && q > 0) {
+                    calculatedArea = ((l * w) + (2 * (l + w) * t)) * q;
+                    descriptionPrefix = 'Suspended Slab Formwork';
+                    isValid = true;
+                }
+            } else if (type === 'beam-formwork') {
+                const l = parseFloat(document.getElementById('fwb-length').value);
+                const w = parseFloat(document.getElementById('fwb-width').value) / 1000; 
+                const d = parseFloat(document.getElementById('fwb-depth').value) / 1000; 
+                const q = parseInt(document.getElementById('fwb-count').value);
+                if (!isNaN(l) && !isNaN(w) && !isNaN(d) && !isNaN(q) && l > 0 && w > 0 && d > 0 && q > 0) {
+                    calculatedArea = ((l * w) + (2 * l * d)) * q;
+                    descriptionPrefix = 'Beam Formwork';
+                    isValid = true;
+                }
+            } else if (type === 'rectangular-column-formwork') {
+                const h = parseFloat(document.getElementById('fwrc-height').value);
+                const w = parseFloat(document.getElementById('fwrc-width').value) / 1000; 
+                const d = parseFloat(document.getElementById('fwrc-depth').value) / 1000; 
+                const q = parseInt(document.getElementById('fwrc-count').value);
+                if (!isNaN(h) && !isNaN(w) && !isNaN(d) && !isNaN(q) && h > 0 && w > 0 && d > 0 && q > 0) {
+                    calculatedArea = (2 * (w + d) * h) * q;
+                    descriptionPrefix = 'Rectangular Column Formwork';
+                    isValid = true;
+                }
+            } else if (type === 'round-column-formwork') {
+                const h = parseFloat(document.getElementById('fwrc-height-round').value);
+                const dia = parseFloat(document.getElementById('fwrc-diameter-round').value) / 1000; 
+                const q = parseInt(document.getElementById('fwrc-count-round').value);
+                if (!isNaN(h) && !isNaN(dia) && !isNaN(q) && h > 0 && dia > 0 && q > 0) {
+                    calculatedArea = (Math.PI * dia * h) * q;
+                    descriptionPrefix = 'Round Column Formwork';
+                    isValid = true;
+                }
+            } else if (type === 'footing-formwork') {
+                const l = parseFloat(document.getElementById('fwf-length').value);
+                const w = parseFloat(document.getElementById('fwf-width').value);
+                const t = parseFloat(document.getElementById('fwf-thickness').value);
+                const q = parseInt(document.getElementById('fwf-count').value);
+                if (!isNaN(l) && !isNaN(w) && !isNaN(t) && !isNaN(q) && l > 0 && w > 0 && t > 0 && q > 0) {
+                    calculatedArea = (2 * (l + w) * t) * q;
+                    descriptionPrefix = 'Footing Formwork';
+                    isValid = true;
+                }
+            }
+
+            if (!isValid) {
+                Swal.fire('Invalid Input', 'Please enter valid, positive numbers for all formwork dimensions and quantities.', 'error');
+                return;
+            }
+
+            addEstimateItem(`${descriptionPrefix} (${material.charAt(0).toUpperCase() + material.slice(1)})`, calculatedArea, 'sq.m.', formworkUnitCost);
+            renderResults();
+
+            const refTitle = `Factors for ${descriptionPrefix} (${material.charAt(0).toUpperCase() + material.slice(1)})`;
+            const refFactors = [
+                { description: 'Unit Cost', value: formworkUnitCost, unit: 'PHP/sq.m.' }
+            ];
+            let refProcedure = [];
+            if (type === 'suspended-slab-formwork') {
+                const l = parseFloat(document.getElementById('fws-length').value);
+                const w = parseFloat(document.getElementById('fws-width').value);
+                const t = parseFloat(document.getElementById('fws-thickness').value);
+                const q = parseInt(document.getElementById('fws-count').value);
+                refProcedure = [
+                    { title: 'Formwork Area per Slab', formula: `(${l}m x ${w}m) + (2 x (${l}m + ${w}m) x ${t}m) = ${((l * w) + (2 * (l + w) * t)).toFixed(2)} sq.m.` },
+                    { title: 'Total Formwork Area', formula: `${((l * w) + (2 * (l + w) * t)).toFixed(2)} sq.m. x ${q} = ${calculatedArea.toFixed(2)} sq.m.` },
+                    { title: 'Estimated Cost', formula: `${calculatedArea.toFixed(2)} sq.m. x PHP ${formworkUnitCost.toFixed(2)}/sq.m. = PHP ${(calculatedArea * formworkUnitCost).toFixed(2)}` }
+                ];
+            } else if (type === 'beam-formwork') {
+                const l = parseFloat(document.getElementById('fwb-length').value);
+                const w = parseFloat(document.getElementById('fwb-width').value) / 1000;
+                const d = parseFloat(document.getElementById('fwb-depth').value) / 1000;
+                const q = parseInt(document.getElementById('fwb-count').value);
+                refProcedure = [
+                    { title: 'Formwork Area per Beam', formula: `(${l}m x ${w.toFixed(3)}m) + (2 x ${l}m x ${d.toFixed(3)}m) = ${((l * w) + (2 * l * d)).toFixed(2)} sq.m.` },
+                    { title: 'Total Formwork Area', formula: `${((l * w) + (2 * l * d)).toFixed(2)} sq.m. x ${q} = ${calculatedArea.toFixed(2)} sq.m.` },
+                    { title: 'Estimated Cost', formula: `${calculatedArea.toFixed(2)} sq.m. x PHP ${formworkUnitCost.toFixed(2)}/sq.m. = PHP ${(calculatedArea * formworkUnitCost).toFixed(2)}` }
+                ];
+            } else if (type === 'rectangular-column-formwork') {
+                const h = parseFloat(document.getElementById('fwrc-height').value);
+                const w = parseFloat(document.getElementById('fwrc-width').value) / 1000;
+                const d = parseFloat(document.getElementById('fwrc-depth').value) / 1000;
+                const q = parseInt(document.getElementById('fwrc-count').value);
+                refProcedure = [
+                    { title: 'Formwork Area per Column', formula: `(2 x (${w.toFixed(3)}m + ${d.toFixed(3)}m)) x ${h}m = ${(2 * (w + d) * h).toFixed(2)} sq.m.` },
+                    { title: 'Total Formwork Area', formula: `${(2 * (w + d) * h).toFixed(2)} sq.m. x ${q} = ${calculatedArea.toFixed(2)} sq.m.` },
+                    { title: 'Estimated Cost', formula: `${calculatedArea.toFixed(2)} sq.m. x PHP ${formworkUnitCost.toFixed(2)}/sq.m. = PHP ${(calculatedArea * formworkUnitCost).toFixed(2)}` }
+                ];
+            } else if (type === 'round-column-formwork') {
+                const h = parseFloat(document.getElementById('fwrc-height-round').value);
+                const dia = parseFloat(document.getElementById('fwrc-diameter-round').value) / 1000;
+                const q = parseInt(document.getElementById('fwrc-count-round').value);
+                refProcedure = [
+                    { title: 'Formwork Area per Column', formula: `PI x ${dia.toFixed(3)}m x ${h}m = ${(Math.PI * dia * h).toFixed(2)} sq.m.` },
+                    { title: 'Total Formwork Area', formula: `${(Math.PI * dia * h).toFixed(2)} sq.m. x ${q} = ${calculatedArea.toFixed(2)} sq.m.` },
+                    { title: 'Estimated Cost', formula: `${calculatedArea.toFixed(2)} sq.m. x PHP ${formworkUnitCost.toFixed(2)}/sq.m. = PHP ${(calculatedArea * formworkUnitCost).toFixed(2)}` }
+                ];
+            } else if (type === 'footing-formwork') {
+                const l = parseFloat(document.getElementById('fwf-length').value);
+                const w = parseFloat(document.getElementById('fwf-width').value);
+                const t = parseFloat(document.getElementById('fwf-thickness').value);
+                const q = parseInt(document.getElementById('fwf-count').value);
+                refProcedure = [
+                    { title: 'Formwork Area per Footing', formula: `(2 x (${l}m + ${w}m)) x ${t}m = ${(2 * (l + w) * t).toFixed(2)} sq.m.` },
+                    { title: 'Total Formwork Area', formula: `${(2 * (l + w) * t).toFixed(2)} sq.m. x ${q} = ${calculatedArea.toFixed(2)} sq.m.` },
+                    { title: 'Estimated Cost', formula: `${calculatedArea.toFixed(2)} sq.m. x PHP ${formworkUnitCost.toFixed(2)}/sq.m. = PHP ${(calculatedArea * formworkUnitCost).toFixed(2)}` }
+                ];
+            }
+            displayReferenceTable('formwork-reference', refTitle, refFactors, refProcedure);
+        }
+        
+        function handleFinishesCalculation() {
+            const type = finishesTypeSelector.value;
+            // Only call the relevant function based on the selected type
+            if (type === 'ceramic-tile') {
+                calculateCeramicTile();
+            } else if (type === 'granite-tile') {
+                calculateGraniteTile();
+            } else if (type === 'wood-plank-flooring') {
+                calculateWoodPlankFlooring();
+            } else if (type === 'wall-painting') {
+                calculateWallPainting();
+            }
+        }
+
+        // New function specifically for Ceramic Tile calculation
+        function calculateCeramicTile() {
+            const l = parseFloat(document.getElementById('ct-length').value);
+            const w = parseFloat(document.getElementById('ct-width').value);
+            const size = document.getElementById('ct-size').value;
+            const wastePercent = parseFloat(document.getElementById('ct-waste').value);
+
+            if (isNaN(l) || isNaN(w) || isNaN(wastePercent) || l <= 0 || w <= 0 || wastePercent < 0) {
+                Swal.fire('Invalid Input', 'Please enter valid dimensions and waste percentage for Ceramic Tile flooring.', 'error');
+                return;
+            }
+
+            const area = l * w;
+            const effectiveArea = area * (1 + wastePercent / 100);
+
+            let tileCost = unitCosts.ceramicTileSqM;
+            
+            // Tile dimensions in meters
+            const tileWidthM = parseInt(size.split('x')[0]) / 100;
+            const tileHeightM = parseInt(size.split('x')[1]) / 100;
+            
+            const numTiles = effectiveArea / (tileWidthM * tileHeightM); 
+            const numAdhesiveBags = effectiveArea / constants.finishes.tileAdhesiveCoverage;
+            const totalGroutKg = area * constants.finishes.groutCoverage;
+
+            addEstimateItem(`Ceramic Tile (${size} cm)`, numTiles, 'pcs', tileCost * (tileWidthM * tileHeightM)); // Cost per tile
+            addEstimateItem('Tile Adhesive', numAdhesiveBags, 'bags', unitCosts.tileAdhesiveBag);
+            addEstimateItem('Tile Grout', totalGroutKg, 'kg', unitCosts.groutKg);
+            renderResults();
+
+            const refTitle = `Factors for Ceramic Tile Flooring`;
+            const refFactors = [
+                { description: 'Tile Area (each)', value: (tileWidthM * tileHeightM), unit: 'sq.m.' },
+                { description: 'Waste Percentage', value: wastePercent, unit: '%' },
+                { description: 'Tile Adhesive Coverage', value: constants.finishes.tileAdhesiveCoverage, unit: 'sq.m./bag' },
+                { description: 'Grout Coverage', value: constants.finishes.groutCoverage, unit: 'kg/sq.m.' },
+                { description: 'Tile Unit Cost', value: tileCost, unit: 'PHP/sq.m.' }
+            ];
+            const refProcedure = [
+                { title: 'Total Area (Actual)', formula: `${l}m x ${w}m = ${area.toFixed(2)} sq.m.` },
+                { title: 'Total Area (with waste)', formula: `${area.toFixed(2)} sq.m. x (1 + ${wastePercent/100}) = ${effectiveArea.toFixed(2)} sq.m.` },
+                { title: 'Number of Tiles', formula: `${effectiveArea.toFixed(2)} sq.m. / (${(tileWidthM * tileHeightM).toFixed(4)}) = ${numTiles.toFixed(2)} pcs` },
+                { title: 'Bags of Tile Adhesive', formula: `${effectiveArea.toFixed(2)} sq.m. / ${constants.finishes.tileAdhesiveCoverage} = ${numAdhesiveBags.toFixed(2)} bags` },
+                { title: 'Kgs of Tile Grout', formula: `${area.toFixed(2)} sq.m. x ${constants.finishes.groutCoverage} = ${totalGroutKg.toFixed(2)} kg` }
+            ];
+            displayReferenceTable('finishes-reference', refTitle, refFactors, refProcedure);
+        }
+
+        // New function specifically for Granite Tile calculation
+        function calculateGraniteTile() {
+            const l = parseFloat(document.getElementById('gt-length').value);
+            const w = parseFloat(document.getElementById('gt-width').value);
+            const size = document.getElementById('gt-size').value;
+            const wastePercent = parseFloat(document.getElementById('gt-waste').value);
+
+            if (isNaN(l) || isNaN(w) || isNaN(wastePercent) || l <= 0 || w <= 0 || wastePercent < 0) {
+                Swal.fire('Invalid Input', 'Please enter valid dimensions and waste percentage for Granite Tile flooring.', 'error');
+                return;
+            }
+
+            const area = l * w;
+            const effectiveArea = area * (1 + wastePercent / 100);
+
+            let tileCost = unitCosts.graniteTileSqM;
+            
+            // Tile dimensions in meters
+            const tileWidthM = parseInt(size.split('x')[0]) / 100;
+            const tileHeightM = parseInt(size.split('x')[1]) / 100;
+            
+            const numTiles = effectiveArea / (tileWidthM * tileHeightM); 
+            const numAdhesiveBags = effectiveArea / constants.finishes.tileAdhesiveCoverage;
+            const totalGroutKg = area * constants.finishes.groutCoverage;
+
+            addEstimateItem(`Granite Tile (${size} cm)`, numTiles, 'pcs', tileCost * (tileWidthM * tileHeightM)); // Cost per tile
+            addEstimateItem('Tile Adhesive', numAdhesiveBags, 'bags', unitCosts.tileAdhesiveBag);
+            addEstimateItem('Tile Grout', totalGroutKg, 'kg', unitCosts.groutKg);
+            renderResults();
+
+            const refTitle = `Factors for Granite Tile Flooring`;
+            const refFactors = [
+                { description: 'Tile Area (each)', value: (tileWidthM * tileHeightM), unit: 'sq.m.' },
+                { description: 'Waste Percentage', value: wastePercent, unit: '%' },
+                { description: 'Tile Adhesive Coverage', value: constants.finishes.tileAdhesiveCoverage, unit: 'sq.m./bag' },
+                { description: 'Grout Coverage', value: constants.finishes.groutCoverage, unit: 'kg/sq.m.' },
+                { description: 'Tile Unit Cost', value: tileCost, unit: 'PHP/sq.m.' }
+            ];
+            const refProcedure = [
+                { title: 'Total Area (Actual)', formula: `${l}m x ${w}m = ${area.toFixed(2)} sq.m.` },
+                { title: 'Total Area (with waste)', formula: `${area.toFixed(2)} sq.m. x (1 + ${wastePercent/100}) = ${effectiveArea.toFixed(2)} sq.m.` },
+                { title: 'Number of Tiles', formula: `${effectiveArea.toFixed(2)} sq.m. / (${(tileWidthM * tileHeightM).toFixed(4)}) = ${numTiles.toFixed(2)} pcs` },
+                { title: 'Bags of Tile Adhesive', formula: `${effectiveArea.toFixed(2)} sq.m. / ${constants.finishes.tileAdhesiveCoverage} = ${numAdhesiveBags.toFixed(2)} bags` },
+                { title: 'Kgs of Tile Grout', formula: `${area.toFixed(2)} sq.m. x ${constants.finishes.groutCoverage} = ${totalGroutKg.toFixed(2)} kg` }
+            ];
+            displayReferenceTable('finishes-reference', refTitle, refFactors, refProcedure);
+        }
+
+        function calculateWoodPlankFlooring() {
+            const l = parseFloat(document.getElementById('wpf-length').value);
+            const w = parseFloat(document.getElementById('wpf-width').value);
+            const wastePercent = parseFloat(document.getElementById('wpf-waste').value);
+
+            if (isNaN(l) || isNaN(w) || isNaN(wastePercent) || l <= 0 || w <= 0 || wastePercent < 0) {
+                Swal.fire('Invalid Input', 'Please enter valid dimensions and waste percentage for wood plank flooring.', 'error');
+                return;
+            }
+
+            const area = l * w;
+            const effectiveArea = area * (1 + wastePercent / 100);
+
+            addEstimateItem('Wood Plank Flooring', effectiveArea, 'sq.m.', unitCosts.woodPlankSqM);
+            renderResults();
+
+            const refTitle = `Factors for Wood Plank Flooring`;
+            const refFactors = [
+                { description: 'Waste Percentage', value: wastePercent, unit: '%' },
+                { description: 'Unit Cost', value: unitCosts.woodPlankSqM, unit: 'PHP/sq.m.' }
+            ];
+            const refProcedure = [
+                { title: 'Total Area (Actual)', formula: `${l}m x ${w}m = ${area.toFixed(2)} sq.m.` },
+                { title: 'Total Area (with waste)', formula: `${area.toFixed(2)} sq.m. x (1 + ${wastePercent/100}) = ${effectiveArea.toFixed(2)} sq.m.` },
+                { title: 'Estimated Cost', formula: `${effectiveArea.toFixed(2)} sq.m. x PHP ${unitCosts.woodPlankSqM.toFixed(2)}/sq.m. = PHP ${(effectiveArea * unitCosts.woodPlankSqM).toFixed(2)}` }
+            ];
+            displayReferenceTable('finishes-reference', refTitle, refFactors, refProcedure);
+        }
+
+        function calculateWallPainting() {
+            const l = parseFloat(document.getElementById('wp-length').value);
+            const h = parseFloat(document.getElementById('wp-height').value);
+            const coats = parseInt(document.getElementById('wp-coats').value);
+            const coverage = parseFloat(document.getElementById('wp-coverage').value);
+
+            if (isNaN(l) || isNaN(h) || isNaN(coats) || isNaN(coverage) || l <= 0 || h <= 0 || coats <= 0 || coverage <= 0) {
+                Swal.fire('Invalid Input', 'Please enter valid wall dimensions, number of coats, and paint coverage.', 'error');
+                return;
+            }
+
+            const wallArea = l * h;
+            const totalPaintVolume = (wallArea * coats) / coverage; // in Liters
+            const totalPrimerVolume = (wallArea * constants.finishes.paintPrimerCoats) / coverage; // in Liters, assuming 1 coat primer
+
+            addEstimateItem('Paint', totalPaintVolume, 'Liters', unitCosts.paintLiter);
+            addEstimateItem('Paint Primer', totalPrimerVolume, 'Liters', unitCosts.paintPrimerLiter);
+            renderResults();
+
+            const refTitle = `Factors for Wall Painting`;
+            const refFactors = [
+                { description: 'Paint Coverage', value: coverage, unit: 'sq.m./L' },
+                { description: 'Primer Coats', value: constants.finishes.paintPrimerCoats, unit: 'coats' },
+                { description: 'Paint Unit Cost', value: unitCosts.paintLiter, unit: 'PHP/L' },
+                { description: 'Primer Unit Cost', value: unitCosts.paintPrimerLiter, unit: 'PHP/L' }
+            ];
+            const refProcedure = [
+                { title: 'Total Wall Area', formula: `${l}m x ${h}m = ${wallArea.toFixed(2)} sq.m.` },
+                { title: 'Total Paint Volume', formula: `(${wallArea.toFixed(2)} sq.m. x ${coats} coats) / ${coverage} sq.m./L = ${totalPaintVolume.toFixed(2)} Liters` },
+                { title: 'Total Primer Volume', formula: `(${wallArea.toFixed(2)} sq.m. x ${constants.finishes.paintPrimerCoats} coats) / ${coverage} sq.m./L = ${totalPrimerVolume.toFixed(2)} Liters` }
+            ];
+            displayReferenceTable('finishes-reference', refTitle, refFactors, refProcedure);
+        }
+
+        function addEstimateItem(description, quantity, unit, unitCost) {
+            const existingItem = estimateItems.find(item => item.description === description && item.unitCost === unitCost);
+            if (existingItem) {
+                existingItem.quantity += quantity;
+            } else {
+                 estimateItems.push({ description, quantity, unit, unitCost });
+            }
+        }
+        
+        function renderResults() {
+            if (estimateItems.length === 0) {
+                estimateList.innerHTML = '<div class="text-center text-gray-500 py-8">Your items will appear here...</div>';
+            } else {
+                estimateList.innerHTML = '';
+            }
+            
+            let subtotal = 0;
+
+            estimateItems.forEach((item, index) => {
+                const totalCost = item.quantity * item.unitCost;
+                subtotal += totalCost;
+
+                const card = document.createElement('div');
+                card.className = 'bg-white border rounded-lg p-3 shadow-sm';
+                card.innerHTML = `
+                    <div class="flex justify-between items-start">
+                        <span class="font-semibold">${item.description}</span>
+                        <button class="text-red-400 hover:text-red-600 remove-item-btn text-lg" data-index="${index}">✖</button>
+                    </div>
+                    <div class="flex items-end justify-between mt-2">
+                        <div>
+                            <div class="flex items-center space-x-2">
+                                <input type="number" step="0.01" value="${item.quantity.toFixed(2)}" class="w-20 border rounded-md p-1 bg-gray-50" data-index="${index}" data-type="quantity">
+                                <span class="text-sm text-gray-600">${item.unit}</span>
+                            </div>
+                            <div class="flex items-center space-x-2 mt-1">
+                                <span class="text-sm text-gray-500">@</span>
+                                <input type="number" step="0.01" value="${item.unitCost.toFixed(2)}" class="w-20 border rounded-md p-1 bg-gray-50" data-index="${index}" data-type="cost">
+                                <span class="text-sm text-gray-600">/ ${item.unit}</span>
+                            </div>
+                        </div>
+                        <span class="font-bold text-lg">PHP ${totalCost.toFixed(2)}</span>
+                    </div>
+                `;
+                estimateList.appendChild(card);
+            });
+            
+            const laborPercent = parseFloat(document.getElementById('labor-percent').value) || 0;
+            const laborCost = subtotal * (laborPercent / 100);
+            const grandTotal = subtotal + laborCost;
+
+            document.getElementById('subtotal-materials').textContent = `PHP ${subtotal.toFixed(2)}`;
+            document.getElementById('total-labor').textContent = `PHP ${laborCost.toFixed(2)}`;
+            document.getElementById('grand-total').textContent = `PHP ${grandTotal.toFixed(2)}`;
+
+            document.querySelectorAll('input[data-index]').forEach(input => {
+                input.removeEventListener('change', updateItem);
+                input.addEventListener('change', updateItem);
+            });
+             document.querySelectorAll('.remove-item-btn').forEach(button => {
+                button.removeEventListener('click', removeItem);
+                button.addEventListener('click', removeItem);
+            });
+        }
+        
+        function updateItem(event) {
+            const index = event.target.dataset.index;
+            const type = event.target.dataset.type;
+            const newValue = parseFloat(event.target.value);
+            if (!isNaN(newValue)) {
+                if(type === 'quantity') estimateItems[index].quantity = newValue;
+                else if (type === 'cost') estimateItems[index].unitCost = newValue;
+                renderResults();
+            }
+        }
+
+        function removeItem(event) {
+            const index = event.target.dataset.index;
+            estimateItems.splice(index, 1);
+            renderResults();
+        }
+        
+        function clearAll() {
+            estimateItems = [];
+            document.getElementById('concrete-reference').innerHTML = '';
+            document.getElementById('masonry-reference').innerHTML = '';
+            document.getElementById('steel-reference').innerHTML = '';
+            document.getElementById('earthworks-reference').innerHTML = ''; 
+            document.getElementById('formwork-reference').innerHTML = ''; 
+            document.getElementById('finishes-reference').innerHTML = ''; 
+            const inputs = document.querySelectorAll('input[type="number"], input[type="text"]');
+            inputs.forEach(input => {
+                // Keep default values for specific inputs like labor-percent and spiral column defaults
+                if(input.id !== 'labor-percent' && input.id !== 'spiral-vert-qty' && input.id !== 'spiral-vert-dia' && input.id !== 'spiral-rebar-dia' && input.id !== 'spiral-pitch' && input.id !== 'col-vert-dia' && input.id !== 'col-tie-dia' && input.id !== 'slab-bar-dia' && input.id !== 'slab-spacing' && input.id !== 'sslab-top-dia' && input.id !== 'sslab-top-spacing' && input.id !== 'sslab-bot-dia' && input.id !== 'sslab-bot-spacing' && input.id !== 'fs-bar-dia' && input.id !== 'fs-spacing' && input.id !== 'dowel-dia' && input.id !== 'beam-main-dia' && input.id !== 'beam-stirrup-dia' && input.id !== 's-beam-top-dia' && input.id !== 's-beam-extra-top-dia' && input.id !== 's-beam-bot-dia' && input.id !== 's-beam-extra-bot-dia' && input.id !== 's-beam-stirrup-dia' && input.id !== 'rws-vert-dia' && input.id !== 'rws-vert-spacing' && input.id !== 'rws-horz-dia' && input.id !== 'rws-horz-spacing' && input.id !== 'rws-foot-trans-dia' && input.id !== 'rws-foot-trans-spacing' && input.id !== 'rws-foot-long-dia' && input.id !== 'rws-foot-long-spacing' && input.id !== 'stairs-main-dia' && input.id !== 'stairs-main-spacing' && input.id !== 'stairs-temp-dia' && input.id !== 'stairs-temp-spacing' && input.id !== 'chb-vert-dia' && input.id !== 'chb-vert-spacing' && input.id !== 'chb-horz-dia' && input.id !== 'chb-horz-layers' && input.id !== 'plaster-thickness' && input.id !== 'stairs-flights' && input.id !== 'mat-top-dia' && input.id !== 'mat-top-spacing' && input.id !== 'mat-bot-dia' && input.id !== 'mat-bot-spacing'
+                && input.id !== 'fws-length' && input.id !== 'fws-width' && input.id !== 'fws-thickness' && input.id !== 'fws-count'
+                && input.id !== 'fwb-length' && input.id !== 'fwb-width' && input.id !== 'fwb-depth' && input.id !== 'fwb-count'
+                && input.id !== 'fwrc-height' && input.id !== 'fwrc-width' && input.id !== 'fwrc-depth' && input.id !== 'fwrc-count'
+                && input.id !== 'fwrc-height-round' && input.id !== 'fwrc-diameter-round' && input.id !== 'fwrc-count-round'
+                && input.id !== 'fwf-length' && input.id !== 'fwf-width' && input.id !== 'fwf-thickness' && input.id !== 'fwf-count'
+                && input.id !== 'ct-waste' && input.id !== 'gt-waste' && input.id !== 'wpf-waste' && input.id !== 'wp-coats' && input.id !== 'wp-coverage' 
+                ) {
+                    input.value = '';
+                } else if (input.id === 'labor-percent') {
+                    input.value = '40'; // Reset labor percent to default
+                } else if (input.id === 'spiral-vert-qty') {
+                    input.value = '6';
+                } else if (input.id === 'spiral-vert-dia') {
+                    input.value = '16';
+                } else if (input.id === 'spiral-rebar-dia') {
+                    input.value = '10';
+                } else if (input.id === 'spiral-pitch') {
+                    input.value = '50';
+                } else if (input.id === 'col-vert-dia') {
+                    input.value = '16';
+                } else if (input.id === 'col-tie-dia') {
+                    input.value = '10';
+                } else if (input.id === 'slab-bar-dia') {
+                    input.value = '10';
+                } else if (input.id === 'slab-spacing') {
+                    input.value = '150';
+                } else if (input.id === 'sslab-top-dia') {
+                    input.value = '10';
+                } else if (input.id === 'sslab-top-spacing') {
+                    input.value = '200';
+                } else if (input.id === 'sslab-bot-dia') {
+                    input.value = '10';
+                } else if (input.id === 'sslab-bot-spacing') {
+                    input.value = '150';
+                } else if (input.id === 'fs-bar-dia') {
+                    input.value = '12';
+                } else if (input.id === 'fs-spacing') {
+                    input.value = '150';
+                } else if (input.id === 'dowel-dia') {
+                    input.value = '16';
+                } else if (input.id === 'beam-main-dia') {
+                    input.value = '16';
+                } else if (input.id === 'beam-stirrup-dia') {
+                    input.value = '10';
+                } else if (input.id === 's-beam-top-dia') {
+                    input.value = '16';
+                } else if (input.id === 's-beam-extra-top-dia') {
+                    input.value = '16';
+                } else if (input.id === 's-beam-bot-dia') {
+                    input.value = '16';
+                } else if (input.id === 's-beam-extra-bot-dia') {
+                    input.value = '16';
+                } else if (input.id === 's-beam-stirrup-dia') {
+                    input.value = '10';
+                } else if (input.id === 'rws-vert-dia') {
+                    input.value = '16';
+                } else if (input.id === 'rws-vert-spacing') {
+                    input.value = '150';
+                } else if (input.id === 'rws-horz-dia') {
+                    input.value = '10';
+                } else if (input.id === 'rws-horz-spacing') {
+                    input.value = '200';
+                } else if (input.id === 'rws-foot-trans-dia') {
+                    input.value = '12';
+                } else if (input.id === 'rws-foot-trans-spacing') {
+                    input.value = '200';
+                } else if (input.id === 'rws-foot-long-dia') {
+                    input.value = '12';
+                } else if (input.id === 'rws-foot-long-spacing') {
+                    input.value = '200';
+                } else if (input.id === 'stairs-main-dia') {
+                    input.value = '12';
+                } else if (input.id === 'stairs-main-spacing') {
+                    input.value = '150';
+                } else if (input.id === 'stairs-temp-dia') {
+                    input.value = '10';
+                } else if (input.id === 'stairs-temp-spacing') {
+                    input.value = '200';
+                } else if (input.id === 'chb-vert-dia') {
+                    input.value = '10';
+                } else if (input.id === 'chb-vert-spacing') {
+                    input.value = '600';
+                } else if (input.id === 'chb-horz-dia') {
+                    input.value = '10';
+                } else if (input.id === 'chb-horz-layers') {
+                    input.value = '3';
+                } else if (input.id === 'plaster-thickness') {
+                    input.value = '16';
+                } else if (input.id === 'stairs-flights') {
+                    input.value = '1';
+                } else if (input.id === 'mat-top-dia') {
+                    input.value = '12';
+                } else if (input.id === 'mat-top-spacing') {
+                    input.value = '150';
+                } else if (input.id === 'mat-bot-dia') {
+                    input.value = '12';
+                } else if (input.id === 'mat-bot-spacing') {
+                    input.value = '150';
+                }
+            });
+            renderResults();
+        }
+
+        renderResults();
+    });
+    </script>
+</body>
+</html>
